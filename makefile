@@ -39,7 +39,12 @@ ifdef DEFINES
    CFLAGS += $(DEFINES)
 endif
 
+# Original objects
 OBJ += main.o main_menu.o serial.o options.o sensors.o trouble_code_reader.o custom_gui.o error_handlers.o about.o reset.o
+
+# Enhanced diagnostic objects
+OBJ += ecu_programming.o advanced_diagnostics.o realtime_charts.o serial_enhanced.o main_menu_enhanced.o
+
 BIN = ScanTool.exe
 
 ifdef MINGDIR

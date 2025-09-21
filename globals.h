@@ -43,6 +43,11 @@ int is_not_genuine_scan_tool;
 int system_of_measurements;
 int display_mode;
 
+// Enhanced features flags
+int enhanced_mode_enabled;
+int realtime_charts_enabled;
+int advanced_diagnostics_enabled;
+
 // File names
 char options_file_name[20];
 char data_file_name[20];
