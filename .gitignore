@@ -3,3 +3,4 @@ build_tools/
 compiled/
 scripts/
 tests/
+*.log
