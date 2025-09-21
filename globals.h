@@ -2,9 +2,8 @@
 #define GLOBALS_H
 
 #include <stdio.h>
-#include <allegro.h>
+#include "allegro_common.h"
 #include "resource.h"
-
 
 //#define LOG_COMMS   // Uncomment this line to enable serial comm logging
 

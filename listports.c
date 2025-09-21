@@ -1,13 +1,13 @@
-/* (C) 2001-2005 Joaquín Mª López Muñoz (joaquin@tid.es). All rights reserved.
+/* (C) 2001-2005 Joaqun M Lpez Muoz (joaquin@tid.es). All rights reserved.
  * (C) 2005 Tony Kmoch, Telematix a.s. [Windows CE version]
  *
  * Permission is granted to use, distribute and modify this code provided that:
- *   · this copyright notice remain unchanged,
- *   · you submit all changes to the copyright holder and properly mark the
+ *    this copyright notice remain unchanged,
+ *    you submit all changes to the copyright holder and properly mark the
  *     changes so they can be told from the original code,
- *   · credits are given to the copyright holder in the documentation of any
+ *    credits are given to the copyright holder in the documentation of any
  *     software using this code with the following line:
- *       "Portions copyright 2001 Joaquín Mª López Muñoz (joaquin@tid.es)"
+ *       "Portions copyright 2001 Joaqun M Lpez Muoz (joaquin@tid.es)"
  *
  * The author welcomes any suggestions on the code or reportings of actual
  * use of the code. Please send your comments to joaquin@tid.es.
@@ -76,7 +76,7 @@ BOOL Win9xListPorts(LISTPORTS_CALLBACK lpCbk,LPVOID lpCbkValue)
  *   |-LEVEL1
  *     |-LEVEL2
  *       |-LEVEL3
- *         · CLASS
+ *          CLASS
  *
  * LEVEL1 keys indicate the type of technology (vg., "PCI", "BIOS", "SCSI"). LEVEL2
  * keys refer to the type of device. So, for instance, "*PNP0501" is for 16550A UARTs.
@@ -91,9 +91,9 @@ BOOL Win9xListPorts(LISTPORTS_CALLBACK lpCbk,LPVOID lpCbkValue)
  *   |-BIOS
  *     |-*PNP0501
  *       |-0D (or any other value, this is not important for us)
- *         · CLASS=        "Ports"
- *         · PORTNAME=     "COM1"
- *         · FRIENDLYNAME= "Communications Port (COM1)"
+ *          CLASS=        "Ports"
+ *          PORTNAME=     "COM1"
+ *          FRIENDLYNAME= "Communications Port (COM1)"
  *
  * Win9xListPorts() scans all LEVEL3 keys under HKLM\ENUM searching for the Class
  * for ports, and when this is found determines, by means of "PORTNAME", whether the
@@ -173,7 +173,6 @@ end:
   }
   else return TRUE;
 }
-
 
 BOOL ScanEnumTree(LPCTSTR lpEnumPath,LISTPORTS_CALLBACK lpCbk,LPVOID lpCbkValue)
 {

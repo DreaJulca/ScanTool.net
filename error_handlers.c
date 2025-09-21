@@ -1,9 +1,9 @@
+#include "allegro_common.h"
 #include <string.h>
 #include "globals.h"
 #include "error_handlers.h"
 
-
-void fatal_error(char *msg)
+void fatal_error(const char *msg)
 {
    char temp_buf[512];
 

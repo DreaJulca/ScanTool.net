@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 #include "globals.h"
 #include "trouble_code_reader.h"
@@ -19,7 +20,6 @@
 #define OPTIONS                    9
 #define ABOUT                      10
 #define EXIT                       11
-
 
 // procedure declarations
 static int read_codes_proc(int msg, DIALOG *d, int c);
@@ -55,7 +55,6 @@ static DIALOG main_dialog[] =
    { d_yield_proc,      0,   0,   0,   0,   0,           0,       0,    0,      0,   0,   NULL,                NULL, NULL },
    { NULL,              0,   0,   0,   0,   0,           0,       0,    0,      0,   0,   NULL,                NULL, NULL }
 };
-
 
 int display_main_menu()
 {
@@ -96,7 +95,6 @@ int display_main_menu()
    return do_dialog(main_dialog, -1);
 }
 
-
 int read_codes_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -113,7 +111,6 @@ int read_codes_proc(int msg, DIALOG *d, int c)
    }
    return ret;  // return
 }
-
 
 int sensor_data_proc(int msg, DIALOG *d, int c)
 {
@@ -150,7 +147,6 @@ int sensor_data_proc(int msg, DIALOG *d, int c)
    return ret;  // return
 }
 
-
 int freeze_frame_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -169,7 +165,6 @@ int freeze_frame_proc(int msg, DIALOG *d, int c)
    return ret;  // return
 }
 
-
 int tests_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -186,7 +181,6 @@ int tests_proc(int msg, DIALOG *d, int c)
    }
    return ret;  // return
 }
-
 
 int options_proc(int msg, DIALOG *d, int c)
 {
@@ -243,7 +237,6 @@ int options_proc(int msg, DIALOG *d, int c)
    return ret;  // return
 }
 
-
 int about_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -261,7 +254,6 @@ int about_proc(int msg, DIALOG *d, int c)
    return ret;  // return
 }
 
-
 int exit_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -277,7 +269,6 @@ int exit_proc(int msg, DIALOG *d, int c)
    }
    return ret;  // return
 }
-
 
 int button_desc_proc(int msg, DIALOG *d, int c)
 {

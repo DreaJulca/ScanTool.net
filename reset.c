@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 
 #include "reset.h"
@@ -6,11 +7,9 @@
 #include "main_menu.h"
 #include "serial.h"
 
-
 static int reset_proc(int msg, DIALOG *d, int c);
 
 static char reset_status_msg[64];
-
 
 static DIALOG reset_chip_dialog[] =
 {
@@ -22,13 +21,11 @@ static DIALOG reset_chip_dialog[] =
    { NULL,              0,   0,  0,   0,  0,       0,            0,    0,      0,   0,   NULL,             NULL, NULL }
 };
 
-
 void reset_chip()
 {
    centre_dialog(reset_chip_dialog);
    popup_dialog(reset_chip_dialog, -1);
 }
-
 
 enum ResetState
 {
@@ -47,7 +44,6 @@ enum ResetState
    RESET_HANDLE_CLONE
 };
 
-
 int Reset_send_reset_request(char *response)
 {
    char buf[128];
@@ -65,7 +61,6 @@ int Reset_send_reset_request(char *response)
    
    return RESET_GET_REPLY_TO_RESET;
 }
-
 
 int Reset_get_reply_to_reset(char *response, int *device)
 {
@@ -105,7 +100,6 @@ int Reset_get_reply_to_reset(char *response, int *device)
    return next_state;
 }
 
-
 int Reset_send_at_at1_request(char *response)
 {
    send_command("at@1");
@@ -114,7 +108,6 @@ int Reset_send_at_at1_request(char *response)
    
    return RESET_GET_AT_AT1_RESPONSE;
 }
-
 
 int Reset_get_at_at1_response(char *response)
 {
@@ -154,7 +147,6 @@ int Reset_get_at_at1_response(char *response)
    return next_state;
 }
 
-
 int Reset_send_at_at2_request(char *response)
 {
    send_command("at@2");
@@ -163,7 +155,6 @@ int Reset_send_at_at2_request(char *response)
    
    return RESET_GET_AT_AT2_RESPONSE;
 }
-
 
 int Reset_get_at_at2_response(char *response)
 {
@@ -201,13 +192,11 @@ int Reset_get_at_at2_response(char *response)
    return next_state;
 }
 
-
 int Reset_start_ecu_timer()
 {
    start_serial_timer(ECU_TIMEOUT);
    return RESET_WAIT_FOR_ECU_TIMEOUT;
 }
-
 
 int Reset_wait_for_ecu_timeout(int device)
 {
@@ -227,7 +216,6 @@ int Reset_wait_for_ecu_timeout(int device)
    return next_state;
 }
 
-
 int Reset_send_detect_protocol_request(char *response)
 {
    int next_state;
@@ -239,7 +227,6 @@ int Reset_send_detect_protocol_request(char *response)
    
    return next_state;
 }
-
 
 int Reset_get_reply_to_detect_protocol(char *response)
 {
@@ -279,14 +266,12 @@ int Reset_get_reply_to_detect_protocol(char *response)
    return next_state;
 }
 
-
 int Reset_handle_clone()
 {
    is_not_genuine_scan_tool = TRUE;
    
    return RESET_START_ECU_TIMER;
 }
-
 
 int reset_proc(int msg, DIALOG *d, int c)
 {

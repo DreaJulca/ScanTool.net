@@ -5,6 +5,7 @@
 // Supports injector coding, throttle calibration, steering angle sensor calibration, etc.
 
 #include "globals.h"
+#include "allegro_common.h"
 
 // Programming operation types
 #define PROG_INJECTOR_CODING           1

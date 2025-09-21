@@ -1,7 +1,10 @@
+#include "allegro_common.h"
 #include <string.h>
+#include <time.h>
 #include "globals.h"
 #include "main_menu.h"
 #include "error_handlers.h"
+#include "datafile.h"
 #include "options.h"
 #include "serial.h"
 #include "version.h"
@@ -15,7 +18,6 @@ END_COLOR_DEPTH_LIST
 
 #define WINDOW_TITLE   "ScanTool.net " SCANTOOL_VERSION_EX_STR
 
-
 void write_log(const char *log_string)
 {
    FILE *logfile = NULL;
@@ -26,7 +28,6 @@ void write_log(const char *log_string)
    fprintf(logfile, log_string);
    fclose(logfile);
 }
-
 
 #ifdef LOG_COMMS
 void write_comm_log(const char *marker, const char *data)
@@ -40,7 +41,6 @@ void write_comm_log(const char *marker, const char *data)
    fclose(logfile);
 }
 #endif
-
 
 static void init()
 {
@@ -61,35 +61,29 @@ static void init()
    
    /* initialize hardware */
    write_log("\nInitializing Allegro... ");
-   allegro_init();
-   write_log("OK");
-   
-   set_window_title(WINDOW_TITLE);
-   
-   write_log("\nInstalling Timers... ");
-   if (install_timer() != 0)
+   if (init_allegro_system() != 0)
    {
-      write_log("Error!");
-      fatal_error("Error installing timers");
+      write_log("FAILED");
+      return 1;
    }
    write_log("OK");
-   write_log("\nInstalling Keyboard... ");
-   install_keyboard();
-   write_log("OK");
+   
+   allegro_set_window_title(WINDOW_TITLE);
+   
    write_log("\nInstalling Mouse... ");
-   install_mouse();
+   allegro_install_mouse();
    write_log("OK");
 
    /* load options from file, the defaults will be automatically substituted if file does not exist */
    write_log("\nLoading Preferences... ");
-   set_config_file(options_file_name);
+   allegro_set_config_file(options_file_name);
    /* if config file doesn't exist or is of an incorrect version */
-   if (strcmp(get_config_string(NULL, "version", ""), SCANTOOL_VERSION_STR) != 0)
+   if (strcmp(allegro_get_config_string(NULL, "version", ""), SCANTOOL_VERSION_STR) != 0)
    {
       /* update config file */
       remove(options_file_name);
-      set_config_file(options_file_name);
-      set_config_string(NULL, "version", SCANTOOL_VERSION_STR);
+      allegro_set_config_file(options_file_name);
+      allegro_set_config_string(NULL, "version", SCANTOOL_VERSION_STR);
       load_program_options();  // Load defaults
       save_program_options();
    }
@@ -100,7 +94,7 @@ static void init()
    display_mode |= FULLSCREEN_MODE_SUPPORTED;
    
    write_log("\nTrying Windowed Graphics Mode... ");
-   if (set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0) == 0)
+   if (allegro_set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0) == 0)
    {
       display_mode |= WINDOWED_MODE_SUPPORTED;
       write_log("OK");
@@ -114,7 +108,7 @@ static void init()
    if (!(display_mode & WINDOWED_MODE_SET))
    {
       write_log("\nTrying Full Screen Graphics Mode... ");
-      if (set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, 640, 480, 0, 0) == 0)
+      if (allegro_set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, 640, 480, 0, 0) == 0)
       {
          display_mode |= FULLSCREEN_MODE_SUPPORTED;
          write_log("OK");
@@ -127,17 +121,17 @@ static void init()
    }
    
    if (!(display_mode & (FULLSCREEN_MODE_SUPPORTED | WINDOWED_MODE_SUPPORTED)))
-      fatal_error(allegro_error);
+      fatal_error(allegro_get_error());
    else if ((display_mode & WINDOWED_MODE_SUPPORTED) && !(display_mode & FULLSCREEN_MODE_SUPPORTED))
    {
-      set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
+      allegro_set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
       display_mode &= WINDOWED_MODE_SET;
    }
    
    write_log("\nLoading Data File... ");
-   packfile_password(PASSWORD);
-   datafile = load_datafile(data_file_name);
-   packfile_password(NULL);
+   allegro_packfile_password(PASSWORD);
+   datafile = allegro_load_datafile(data_file_name);
+   allegro_packfile_password(NULL);
    if (datafile == NULL)
    {
       sprintf(temp_buf, "Error loading %s!", data_file_name);
@@ -146,7 +140,7 @@ static void init()
    }
    write_log("OK");
 
-   set_pallete(datafile[MAIN_PALETTE].dat);
+   allegro_set_palette(datafile[MAIN_PALETTE].dat);
    font = datafile[ARIAL12_FONT].dat;
    gui_fg_color = C_BLACK;  // set the foreground color
    gui_bg_color = C_WHITE;  // set the background color
@@ -177,22 +171,20 @@ static void init()
    }
 }
 
-
 static void shut_down()
 {
    //clean up
-   flush_config_file();
+   allegro_flush_config_file();
    write_log("\nShutting Down Serial Module... ");
    serial_module_shutdown();
    write_log("OK");
    write_log("\nUnloading Data File... ");
-   unload_datafile(datafile);
+   allegro_unload_datafile(datafile);
    write_log("OK");
    write_log("\nShutting Down Allegro... ");
    allegro_exit();
    write_log("OK");
 }
-
 
 int main()
 {

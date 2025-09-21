@@ -4,16 +4,16 @@
  *
  * LEGAL:
  *
- * (C) 2001-2005 Joaquín Mª López Muñoz (joaquin@tid.es). All rights reserved.
+ * (C) 2001-2005 Joaqun M Lpez Muoz (joaquin@tid.es). All rights reserved.
  * (C) 2005 Tony Kmoch, Telematix a.s. [Windows CE version]
  *
  * Permission is granted to use, distribute and modify this code provided that:
- *   · this copyright notice remain unchanged,
- *   · you submit all changes to the copyright holder and properly mark the
+ *    this copyright notice remain unchanged,
+ *    you submit all changes to the copyright holder and properly mark the
  *     changes so they can be told from the original code,
- *   · credits are given to the copyright holder in the documentation of any
+ *    credits are given to the copyright holder in the documentation of any
  *     software using this code with the following line:
- *       "Portions copyright 2001 Joaquín Mª López Muñoz (joaquin@tid.es)"
+ *       "Portions copyright 2001 Joaqun M Lpez Muoz (joaquin@tid.es)"
  *
  * The author welcomes any suggestions on the code or reportings of actual
  * use of the code. Please send your comments to joaquin@tid.es.
@@ -24,8 +24,8 @@
  * you, its user, assume the entire risk as to its quality and accuracy.
  *
  * Changes in version 2.0
- *   · Added lpTechnology to LISTPORTS_PORTINFO.
- *   · Windows CE supported (Tony Kmoch).
+ *    Added lpTechnology to LISTPORTS_PORTINFO.
+ *    Windows CE supported (Tony Kmoch).
  *
  * Last modified: August 23rd, 2005
  */
@@ -40,7 +40,7 @@ extern "C"{
 #endif
 
 #ifdef ALLEGRO_WINDOWS
-   #include <allegro.h>
+   
    #include <winalleg.h>
 #else
    #include <windows.h>

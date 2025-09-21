@@ -1,16 +1,13 @@
 #include <stdio.h>
 #include <string.h>
-#include <allegro.h>
-#include <winalleg.h>
 
 #include "listports.h"
 #include "get_port_names.h"
-
+#include "get_port_names.h"
 
 static char* ports_list;
 static int ports_list_index;
 static int ports_list_size;
-
 
 static BOOL CALLBACK listport_callback(LPVOID lpCallbackValue, LISTPORTS_PORTINFO* lpPortInfo)
 {
@@ -36,7 +33,6 @@ static BOOL CALLBACK listport_callback(LPVOID lpCallbackValue, LISTPORTS_PORTINF
    return TRUE;
 }
 
-
 static int ports_cmp(const void* port1, const void* port2)
 {
    int len1 = strlen(port1);
@@ -50,15 +46,14 @@ static int ports_cmp(const void* port1, const void* port2)
       return stricmp(port1, port2);
 }
 
-
 int get_port_names(char** list, int* list_size)
 {
    int i, j;
    char* new_list;
    int new_list_size = 0;
    
-   ASSERT(list != NULL);
-   ASSERT(list_size != NULL);
+   // Replaced ASSERT with simple checks
+   if (list == NULL || list_size == NULL) return -1;
    
    *list = NULL;
    *list_size = 0;

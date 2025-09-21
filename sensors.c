@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 #include "globals.h"
 #include "serial.h"
@@ -6,6 +7,7 @@
 #include "sensors.h"
 #include "custom_gui.h"
 #include "reset.h"
+#include "allegro_common.h"
 
 #define MSG_TOGGLE   MSG_USER
 #define MSG_UPDATE   MSG_USER + 1
@@ -20,7 +22,6 @@
 #define SENSOR_OFF      0  // OFF,
 #define SENSOR_ACTIVE   1  // ACTIVE (returned value), 
 #define SENSOR_NA       2  // NA (displays "N/A")
-
 
 typedef struct
 {
@@ -244,13 +245,11 @@ static DIALOG sensor_dialog[] =
    { NULL,                   0,   0,   0,   0,  0,       0,             0,    0,      0,   0,   NULL,               NULL, NULL }
 };
 
-
 void inc_refresh_time(void)
 {
    refresh_time++;
 }
 END_OF_FUNCTION(inc_refresh_time);
-
 
 int display_sensor_dialog(int reset)
 {
@@ -275,7 +274,6 @@ int display_sensor_dialog(int reset)
 
    return ret;
 }
-
 
 static void calculate_refresh_rate(int sensor_state)
 {
@@ -330,7 +328,6 @@ static void calculate_refresh_rate(int sensor_state)
    }
 }
 
-
 int reset_chip_proc(int msg, DIALOG *d, int c)
 {
    int ret = d_button_proc(msg, d, c);
@@ -346,7 +343,6 @@ int reset_chip_proc(int msg, DIALOG *d, int c)
    
    return ret;
 }
-
 
 int options_proc(int msg, DIALOG *d, int c)
 {
@@ -365,7 +361,6 @@ int options_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 int page_updn_handler_proc(int msg, DIALOG *d, int c)
 {
    if ((msg == MSG_XCHAR) && ((c>>8) == KEY_PGUP || (c>>8) == KEY_PGDN))
@@ -380,7 +375,6 @@ int page_updn_handler_proc(int msg, DIALOG *d, int c)
 
    return D_O_K;
 }
-
 
 int inst_refresh_rate_proc(int msg, DIALOG *d, int c)
 {
@@ -412,7 +406,6 @@ int inst_refresh_rate_proc(int msg, DIALOG *d, int c)
 
    return d_text_proc(msg, d, c);
 }
-
 
 int avg_refresh_rate_proc(int msg, DIALOG *d, int c)
 {
@@ -461,7 +454,6 @@ void load_sensor_states()
    }
 }
 
-
 void save_sensor_states()
 {
    int i;
@@ -508,7 +500,6 @@ void fill_sensors(int page_number)
    sensors_on_page = index;
 }
 
-
 int page_number_proc(int msg, DIALOG *d, int c)
 {
    switch (msg)
@@ -533,7 +524,6 @@ int page_number_proc(int msg, DIALOG *d, int c)
    
    return st_ctext_proc(msg, d, c);
 }
-
 
 int page_flipper_proc(int msg, DIALOG *d, int c)
 {
@@ -586,7 +576,6 @@ int page_flipper_proc(int msg, DIALOG *d, int c)
    
    return ret;
 }
-
 
 int toggle_proc(int msg, DIALOG *d, int c)
 {
@@ -671,7 +660,6 @@ int toggle_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 int toggle_all_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -741,7 +729,6 @@ int toggle_all_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 int status_proc(int msg, DIALOG *d, int c)
 {
    switch (msg)
@@ -798,7 +785,6 @@ int status_proc(int msg, DIALOG *d, int c)
 
    return d_text_proc(msg, d, c);
 }
-
 
 #define SENSOR_LABEL_MARGIN   245
 #define SENSOR_VALUE_INDENT   8
@@ -1063,7 +1049,6 @@ int sensor_proc(int msg, DIALOG *d, int c)
    return D_O_K;
 }
 
-
 void engine_rpm_formula(int data, char *buf)
 {
    if (system_of_measurements == METRIC)
@@ -1072,12 +1057,10 @@ void engine_rpm_formula(int data, char *buf)
       sprintf(buf, "%i rpm", (int)((float)data/4));
 }
 
-
 void engine_load_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data*100/255);
 }
-
 
 void coolant_temp_formula(int data, char *buf)
 {
@@ -1086,7 +1069,6 @@ void coolant_temp_formula(int data, char *buf)
    else   // if the system is IMPERIAL
       sprintf(buf, "%i%c F", (int)(((float)data-40)*9/5 + 32), 0xB0);
 }
-
 
 void fuel_system_status_formula(int data, char *buf)
 {
@@ -1106,18 +1088,15 @@ void fuel_system_status_formula(int data, char *buf)
       sprintf(buf, "unknown: 0x%02X", data);
 }
 
-
 void fuel_system1_status_formula(int data, char *buf)
 {
    fuel_system_status_formula((data >> 8) & 0xFF, buf);  // Fuel System 1 status: Data A
 }
 
-
 void fuel_system2_status_formula(int data, char *buf)
 {
    fuel_system_status_formula(data & 0xFF, buf);  // Fuel System 2 status: Data B
 }
-
 
 void vehicle_speed_formula(int data, char *buf)
 {
@@ -1127,7 +1106,6 @@ void vehicle_speed_formula(int data, char *buf)
       sprintf(buf, "%i mph", (int)(data/1.609));
 }
 
-
 void intake_pressure_formula(int data, char *buf)
 {
    if (system_of_measurements == METRIC || system_of_measurements == BRITISH)
@@ -1136,12 +1114,10 @@ void intake_pressure_formula(int data, char *buf)
       sprintf(buf, "%.1f inHg", data/3.386389);
 }
 
-
 void timing_advance_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%c", ((float)data-128)/2, 0xB0);
 }
-
 
 void intake_air_temp_formula(int data, char *buf)
 {
@@ -1151,7 +1127,6 @@ void intake_air_temp_formula(int data, char *buf)
       sprintf(buf, "%i%c F", (int)(((float)data-40)*9/5 + 32), 0xB0);
 }
 
-
 void air_flow_rate_formula(int data, char *buf)
 {
    if (system_of_measurements == METRIC || system_of_measurements == BRITISH)
@@ -1160,12 +1135,10 @@ void air_flow_rate_formula(int data, char *buf)
       sprintf(buf, "%.1f lb/min", data*0.0013227736);
 }
 
-
 void throttle_position_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data*100/255);
 }
-
 
 // **** New formulae added 3/11/2003: ****
 
@@ -1178,7 +1151,6 @@ void fuel_pressure_formula(int data, char *buf)
       sprintf(buf, "%.1f psi", data*3*0.145037738);
 }
 
-
 // Fuel Trim statuses: PID 06-09
 void short_term_fuel_trim_formula(int data, char *buf)
 {
@@ -1188,7 +1160,6 @@ void short_term_fuel_trim_formula(int data, char *buf)
    sprintf(buf, (data == 128) ? "0.0%%" : "%+.1f%%", ((float)data - 128)*100/128);
 }
 
-
 void long_term_fuel_trim_formula(int data, char *buf)
 {
    if (data > 0xFF)  // we're only showing bank 1 and 2 FT
@@ -1196,7 +1167,6 @@ void long_term_fuel_trim_formula(int data, char *buf)
 
    sprintf(buf, (data == 128) ? "0.0%%" : "%+.1f%%", ((float)data - 128)*100/128);
 }
-
 
 // Commanded secondary air status: PID 12
 void secondary_air_status_formula(int data, char *buf)
@@ -1223,7 +1193,6 @@ void o2_sensor_formula(int data, char *buf)
    else
       sprintf(buf, ((data & 0xFF) == 128) ? "%.3f V @ 0.0%% s.t. fuel trim" : "%.3f V @ %+.1f%% s.t. fuel trim", (data >> 8)*0.005, ((float)(data & 0xFF) - 128)*100/128);
 }
-
 
 //Power Take-Off Status: PID 1E
 void pto_status_formula(int data, char *buf)
@@ -1296,7 +1265,6 @@ void engine_run_time_formula(int data, char *buf)
    sprintf(buf, "%02i:%02i:%02i", hrs, min, sec);
 }
 
-
 void mil_distance_formula(int data, char *buf)
 {
    if (system_of_measurements == METRIC)
@@ -1304,7 +1272,6 @@ void mil_distance_formula(int data, char *buf)
    else   // if the system is IMPERIAL or BRITISH
       sprintf(buf, "%i miles", (int)(data/1.609));
 }
-
 
 void frp_relative_formula(int data, char *buf)
 {
@@ -1318,7 +1285,6 @@ void frp_relative_formula(int data, char *buf)
    else   // if the system is IMPERIAL or BRITISH
       sprintf(buf, "%.1f PSI", psi);
 }
-
 
 void frp_widerange_formula(int data, char *buf)
 {
@@ -1334,7 +1300,6 @@ void frp_widerange_formula(int data, char *buf)
       sprintf(buf, "%.1f PSI", psi);
 }
 
-
 void o2_sensor_wrv_formula(int data, char *buf)
 {
    float eq_ratio, o2_voltage; // equivalence ratio and sensor voltage
@@ -1344,7 +1309,6 @@ void o2_sensor_wrv_formula(int data, char *buf)
    
    sprintf(buf, "%.3f V, Eq. ratio: %.3f", o2_voltage, eq_ratio);
 }
-
 
 //Commanded EGR status: PID 2C
 void commanded_egr_formula(int data, char *buf)
@@ -1358,24 +1322,20 @@ void egr_error_formula(int data, char *buf)
    sprintf(buf, (data == 128) ? "0.0%%" : "%+.1f%%", (float)(data-128)/255*100);
 }
 
-
 void evap_pct_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data/255*100);
 }
-
 
 void fuel_level_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data/255*100);
 }
 
-
 void warm_ups_formula(int data, char *buf)
 {
    sprintf(buf, "%i", data);
 }
-
 
 void clr_distance_formula(int data, char *buf)
 {
@@ -1385,7 +1345,6 @@ void clr_distance_formula(int data, char *buf)
       sprintf(buf, "%i miles", (int)(data/1.609));
 }
 
-
 void evap_vp_formula(int data, char *buf)
 {
    if (system_of_measurements == METRIC || system_of_measurements == BRITISH)
@@ -1394,7 +1353,6 @@ void evap_vp_formula(int data, char *buf)
       sprintf(buf, "%.3f in H2O", data*0.25/249.088908);
 }
 
-
 void baro_pressure_formula(int data, char *buf)
 {
    if (system_of_measurements == METRIC || system_of_measurements == BRITISH)
@@ -1402,7 +1360,6 @@ void baro_pressure_formula(int data, char *buf)
    else    // if the system is in IMPERIAL
       sprintf(buf, "%.1f inHg", data*0.2953);
 }
-
 
 void o2_sensor_wrc_formula(int data, char *buf)
 {
@@ -1413,7 +1370,6 @@ void o2_sensor_wrc_formula(int data, char *buf)
 
    sprintf(buf, "%.3f mA, Eq. ratio: %.3f", o2_ma, eq_ratio);
 }
-
 
 void cat_temp_formula(int data, char *buf)
 {
@@ -1428,30 +1384,25 @@ void cat_temp_formula(int data, char *buf)
       sprintf(buf, "%.1f%c F", f, 0xB0);
 }
 
-
 void ecu_voltage_formula(int data, char *buf)
 {
    sprintf(buf, "%.3f V", data*0.001);
 }
-
 
 void abs_load_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data*100/255);
 }
 
-
 void eq_ratio_formula(int data, char *buf)
 {
    sprintf(buf, "%.3f", data*0.0000305);
 }
 
-
 void relative_tp_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data*100/255);
 }
-
 
 void amb_air_temp_formula(int data, char *buf)
 {
@@ -1466,30 +1417,25 @@ void amb_air_temp_formula(int data, char *buf)
       sprintf(buf, "%i%c F", f, 0xB0);
 }
 
-
 void abs_tp_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data*100/255);
 }
-
 
 void tac_pct_formula(int data, char *buf)
 {
    sprintf(buf, "%.1f%%", (float)data*100/255);
 }
 
-
 void mil_time_formula(int data, char *buf)
 {
    sprintf(buf, "%i hrs %i min", data/60, data%60);
 }
 
-
 void clr_time_formula(int data, char *buf)
 {
    sprintf(buf, "%i hrs %i min", data/60, data%60);
 }
-
 
 int genuine_proc(int msg, DIALOG *d, int c)
 {

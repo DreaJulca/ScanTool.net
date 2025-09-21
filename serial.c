@@ -1,24 +1,31 @@
 #include <string.h>
 #include <ctype.h>
 #include "globals.h"
-#include <allegro/internal/aintern.h>
-#ifdef ALLEGRO_WINDOWS
-   #include <winalleg.h>
-#else
-   #include <dzcomm.h>
-#endif
+#include "allegro_common.h"
 #include "serial.h"
 
+// For Windows MinGW builds, we use Windows API directly
 #ifdef ALLEGRO_WINDOWS
+   // Define processor architecture before including Windows headers
+   #ifndef _M_IX86
+   #define _M_IX86
+   #endif
+   #ifndef _X86_
+   #define _X86_
+   #endif
+   #ifndef i386
+   #define i386
+   #endif
+   // Prevent BITMAP conflict by defining WIN32_LEAN_AND_MEAN
+   #define WIN32_LEAN_AND_MEAN
+   #define NOGDI  // Exclude GDI APIs that conflict with Allegro BITMAP
+   #include <windows.h>
+   #undef NOGDI
    static HANDLE com_port;
-#else
-   static comm_port *com_port;
 #endif
 
 #define TX_TIMEOUT_MULTIPLIER    0
 #define TX_TIMEOUT_CONSTANT      1000
-
-
 
 //timer interrupt handler for sensor data
 static void serial_time_out_handler()
@@ -28,7 +35,6 @@ static void serial_time_out_handler()
 }
 END_OF_STATIC_FUNCTION(serial_time_out_handler)
 
-
 void start_serial_timer(int delay)
 {
    stop_serial_timer();
@@ -37,14 +43,12 @@ void start_serial_timer(int delay)
    serial_timer_running = TRUE;
 }
 
-
 void stop_serial_timer()
 {
    remove_int(serial_time_out_handler);
    serial_time_out = FALSE;
    serial_timer_running = FALSE;
 }
-
 
 void serial_module_init()
 {
@@ -58,7 +62,6 @@ void serial_module_init()
    _add_exit_func(serial_module_shutdown, "serial_module_shutdown");
 }
 
-
 void serial_module_shutdown()
 {
    close_comport();
@@ -69,7 +72,6 @@ void serial_module_shutdown()
    
    _remove_exit_func(serial_module_shutdown);
 }
-
 
 int open_comport()
 {
@@ -158,7 +160,6 @@ int open_comport()
    return 0; // everything is okay
 }
 
-
 void close_comport()
 {
    if (comport.status == READY)    // if the comport is open, close it
@@ -174,7 +175,6 @@ void close_comport()
    }
    comport.status = NOT_OPEN;
 }
-
 
 void send_command(const char *command)
 {
@@ -205,7 +205,6 @@ void send_command(const char *command)
    write_comm_log("TX", tx_buf);
 #endif
 }
-
 
 int read_comport(char *response)
 {
@@ -257,7 +256,6 @@ int read_comport(char *response)
       return DATA;
    }
 }
-
 
 int find_valid_response(char *buf, char *response, const char *filter, char **stop)
 {
@@ -425,7 +423,6 @@ int process_response(const char *cmd_sent, char *msg_received)
    return RUBBISH;
 }
 
-
 int display_error_message(int error, int retry)
 {
    char buf[32];
@@ -464,7 +461,6 @@ int display_error_message(int error, int retry)
          return alert(buf, NULL, NULL, (retry) ? "Retry" : "OK", (retry) ? "Cancel" : NULL, 0, 0);
    }
 }
-
 
 const char *get_protocol_string(int interface_type, int protocol_id)
 {

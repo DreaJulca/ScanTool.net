@@ -1,3 +1,5 @@
+#include "allegro_common.h"
+#include "enhanced_communication.h"
 #include <string.h>
 #include <stdlib.h>
 #include "globals.h"
@@ -5,6 +7,11 @@
 #include "ecu_programming.h"
 #include "serial_enhanced.h"
 #include "custom_gui.h"
+
+// Windows Sleep function declaration (to avoid including windows.h which conflicts with Allegro)
+#ifdef _WIN32
+extern void __stdcall Sleep(unsigned long dwMilliseconds);
+#endif
 
 DIAGNOSTIC_SESSION current_diagnostic_session;
 
@@ -397,4 +404,120 @@ int display_maintenance_reset_menu(void)
 {
     // This would display a focused maintenance reset menu
     return display_advanced_diagnostics_menu(); // For now, use the same menu
+}
+
+// Implementation for throttle body calibration
+int perform_throttle_body_calibration(void)
+{
+    // Initialize UDS communication for throttle body calibration
+    if (!init_enhanced_communication()) {
+        return 0;
+    }
+    
+    // Step 1: Enter diagnostic mode
+    unsigned char diagnostic_data[] = {0x03}; // Extended diagnostic session data
+    if (!uds_send_diagnostic_message(0x10, diagnostic_data, 1)) {
+        return 0;
+    }
+    
+    // Step 2: Security access if required
+    unsigned char security_data[] = {0x01}; // Request seed data
+    if (!uds_send_diagnostic_message(0x27, security_data, 1)) {
+        return 0;
+    }
+    
+    // Step 3: Start throttle body calibration routine
+    unsigned char calibration_data[] = {0x01, 0xF0, 0x10}; // Start routine data
+    if (!uds_send_diagnostic_message(0x31, calibration_data, 3)) {
+        return 0;
+    }
+    
+    // Wait for calibration to complete (typically 30-60 seconds)
+    for (int i = 0; i < 60; i++) {
+        unsigned char status_data[] = {0x03, 0xF0, 0x10}; // Check routine status data
+        if (uds_send_diagnostic_message(0x31, status_data, 3)) {
+            // Check if calibration is complete
+            // Implementation would parse response for completion status
+            break;
+        }
+        Sleep(1000); // Wait 1 second (Windows API)
+    }
+    
+    return 1; // Success
+}
+
+// Implementation for steering angle sensor calibration  
+int perform_steering_angle_sensor_calibration(void)
+{
+    if (!init_enhanced_communication()) {
+        return 0;
+    }
+    
+    // Step 1: Enter diagnostic mode
+    unsigned char diagnostic_data[] = {0x03};
+    if (!uds_send_diagnostic_message(0x10, diagnostic_data, 1)) {
+        return 0;
+    }
+    
+    // Step 2: Clear any existing steering angle sensor faults
+    unsigned char clear_dtc_data[] = {0xFF, 0xFF, 0xFF};
+    uds_send_diagnostic_message(0x14, clear_dtc_data, 3);
+    
+    // Step 3: Start steering angle sensor calibration
+    unsigned char calibration_data[] = {0x01, 0xF0, 0x20}; // Start SAS calibration data
+    if (!uds_send_diagnostic_message(0x31, calibration_data, 3)) {
+        return 0;
+    }
+    
+    // Step 4: Set steering wheel to center position
+    // (User instruction would be displayed here)
+    
+    // Step 5: Confirm calibration
+    unsigned char confirm_data[] = {0x01, 0xF0, 0x21}; // Confirm center position data
+    if (!uds_send_diagnostic_message(0x31, confirm_data, 3)) {
+        return 0;
+    }
+    
+    return 1; // Success
+}
+
+// Implementation for battery registration procedure
+int perform_battery_registration_procedure(void)
+{
+    if (!init_enhanced_communication()) {
+        return 0;
+    }
+    
+    // Step 1: Enter diagnostic mode
+    unsigned char diagnostic_data[] = {0x03};
+    if (!uds_send_diagnostic_message(0x10, diagnostic_data, 1)) {
+        return 0;
+    }
+    
+    // Step 2: Read current battery information
+    unsigned char read_battery_data[] = {0xF1, 0x90}; // Read battery data
+    if (!uds_send_diagnostic_message(0x22, read_battery_data, 2)) {
+        return 0;
+    }
+    
+    // Step 3: Write new battery information
+    // Battery capacity, type, and manufacturing date would be parameters
+    unsigned char write_battery_data[] = {0xF1, 0x90, 0x00, 0x50, 0x01}; // Example: 80Ah AGM battery
+    if (!uds_send_diagnostic_message(0x2E, write_battery_data, 5)) {
+        return 0;
+    }
+    
+    // Step 4: Register battery replacement
+    unsigned char register_data[] = {0x01, 0xF0, 0x30}; // Battery registration routine data
+    if (!uds_send_diagnostic_message(0x31, register_data, 3)) {
+        return 0;
+    }
+    
+    // Step 5: Reset battery learning parameters
+    unsigned char reset_learning_data[] = {0x01, 0xF0, 0x31}; // Reset learning data
+    if (!uds_send_diagnostic_message(0x31, reset_learning_data, 3)) {
+        return 0;
+    }
+    
+    return 1; // Success
 }

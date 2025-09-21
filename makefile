@@ -46,8 +46,11 @@ endif
 # Original objects
 OBJ += main.o main_menu.o serial.o options.o sensors.o trouble_code_reader.o custom_gui.o error_handlers.o about.o reset.o
 
-# Enhanced diagnostic objects
-OBJ += ecu_programming.o advanced_diagnostics.o realtime_charts.o serial_enhanced.o main_menu_enhanced.o oil_cooler_sensors.o
+# Allegro implementation (single point of allegro.h inclusion)
+OBJ += allegro_impl.o
+
+# Enhanced diagnostic objects - now including all modules
+OBJ += main_menu_enhanced.o ecu_programming.o advanced_diagnostics.o realtime_charts.o enhanced_communication.o
 
 BIN = ScanTool.exe
 

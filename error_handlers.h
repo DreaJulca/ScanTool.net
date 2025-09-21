@@ -3,6 +3,6 @@
 
 char temp_error_buf[256];
 
-void fatal_error(char *msg);
+void fatal_error(const char *msg);
 
 #endif

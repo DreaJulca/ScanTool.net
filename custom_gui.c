@@ -1,7 +1,8 @@
+#include "allegro_common.h"
 #include "globals.h"
-#include <allegro/internal/aintern.h>
-#include "custom_gui.h"
 
+#include "custom_gui.h"
+#include "allegro_common.h"
 
 /* nostretch_icon_proc:
  *  Custom version of d_icon_proc.  Instead of stretching the bitmap to fit
@@ -34,7 +35,6 @@ int nostretch_icon_proc(int msg, DIALOG *d, int c)
 
    return d_button_proc(msg, d, c);
 }
-
 
 int super_textbox_proc(int msg, DIALOG *d, int c)
 {
@@ -88,7 +88,6 @@ int super_textbox_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 int caption_proc(int msg, DIALOG *d, int c)
 {
    if (msg == MSG_START)
@@ -97,7 +96,6 @@ int caption_proc(int msg, DIALOG *d, int c)
    }
    return st_ctext_proc(msg, d, c);
 }
-
 
 int st_ctext_proc(int msg, DIALOG *d, int c)
 {

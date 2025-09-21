@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 #include "globals.h"
 #include "main_menu.h"
@@ -13,7 +14,8 @@
 #include "custom_gui.h"
 
 // Local buffer for button descriptions
-static char enhanced_enhanced_button_description[256];
+static char enhanced_button_description[256];
+static char welcome_message[256] = "ScanTool Enhanced - Advanced Automotive Diagnostics";
 
 // Enhanced menu button procedures
 static int ecu_programming_proc(int msg, DIALOG *d, int c)
@@ -23,13 +25,13 @@ static int ecu_programming_proc(int msg, DIALOG *d, int c)
     
     if (msg == MSG_GOTMOUSE) {
         // Update button description for ECU programming
-        sprintf(enhanced_enhanced_button_description, "Advanced ECU programming: injector coding, throttle calibration, steering angle sensor setup");
+        sprintf(enhanced_button_description, "Advanced ECU programming: injector coding, throttle calibration, steering angle sensor setup");
     }
     
     if (ret == D_CLOSE) {
         display_ecu_programming_menu();
         extern char welcome_message[];
-        strcpy(enhanced_enhanced_button_description, welcome_message);
+        strcpy(enhanced_button_description, welcome_message);
         return D_REDRAW;
     }
     

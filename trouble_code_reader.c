@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
@@ -7,6 +8,7 @@
 #include "custom_gui.h"
 #include "error_handlers.h"
 #include "trouble_code_reader.h"
+#include "allegro_common.h"
 
 #define MSG_READ_CODES    MSG_USER
 #define MSG_CLEAR_CODES   MSG_USER+1
@@ -135,7 +137,6 @@ static DIALOG confirm_clear_dialog[] =
    { NULL,               0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,                                NULL, NULL }
 };
 
-
 int display_trouble_codes()
 {
    int ret;
@@ -156,7 +157,6 @@ int display_trouble_codes()
       
    return ret;
 }
-
 
 void trouble_codes_simulator(int show)
 {
@@ -180,7 +180,6 @@ void trouble_codes_simulator(int show)
 
    broadcast_dialog_message(MSG_READY, 0);
 }
-      
 
 int current_code_proc(int msg, DIALOG *d, int c)
 {
@@ -206,7 +205,6 @@ int current_code_proc(int msg, DIALOG *d, int c)
       
    return st_ctext_proc(msg, d, c);
 }
-
 
 int tr_description_proc(int msg, DIALOG *d, int c)   // procedure which displays a textbox
 {
@@ -242,7 +240,6 @@ int tr_description_proc(int msg, DIALOG *d, int c)   // procedure which displays
    return d_textbox_proc(msg, d, c);
 }
 
-
 int tr_solution_proc(int msg, DIALOG *d, int c)   // procedure which displays a textbox
 {
    switch (msg)
@@ -261,7 +258,6 @@ int tr_solution_proc(int msg, DIALOG *d, int c)   // procedure which displays a 
 
    return d_textbox_proc(msg, d, c);
 }
-
 
 int num_of_codes_proc(int msg, DIALOG *d, int c)
 {
@@ -290,7 +286,6 @@ int num_of_codes_proc(int msg, DIALOG *d, int c)
    return st_ctext_proc(msg, d, c);
 }
 
-
 int mil_status_proc(int msg, DIALOG *d, int c)
 {
    switch (msg)
@@ -310,7 +305,6 @@ int mil_status_proc(int msg, DIALOG *d, int c)
    
    return d_bitmap_proc(msg, d, c);
 }
-
 
 int mil_text_proc(int msg, DIALOG *d, int c)
 {
@@ -341,7 +335,6 @@ int mil_text_proc(int msg, DIALOG *d, int c)
    
    return st_ctext_proc(msg, d, c);
 }
-
 
 int simulate_proc(int msg, DIALOG *d, int c)
 {
@@ -386,7 +379,6 @@ int simulate_proc(int msg, DIALOG *d, int c)
    return ret;
 }   
 
-
 void read_codes()
 {
    while (comport.status != READY)
@@ -403,7 +395,6 @@ void read_codes()
    broadcast_dialog_message(MSG_READY, 0);
    broadcast_dialog_message(MSG_READ_CODES, 0);
 }
-
 
 int read_tr_codes_proc(int msg, DIALOG *d, int c)
 {
@@ -444,7 +435,6 @@ int read_tr_codes_proc(int msg, DIALOG *d, int c)
 
    return ret;
 }
-
 
 int clear_codes_proc(int msg, DIALOG *d, int c)
 {
@@ -496,7 +486,6 @@ int clear_codes_proc(int msg, DIALOG *d, int c)
 
    return ret;
 }
-
 
 // heart of the trouble_code_reader module:
 int tr_code_proc(int msg, DIALOG *d, int c)
@@ -749,7 +738,6 @@ int tr_code_proc(int msg, DIALOG *d, int c)
    return D_O_K;
 }  // end of tr_codes_proc()
 
-
 int code_list_proc(int msg, DIALOG *d, int c)
 {
    static int curr_num_of_codes = 0;
@@ -779,7 +767,6 @@ int code_list_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 char* code_list_getter(int index, int *list_size)
 {
    if (index < 0)
@@ -790,7 +777,6 @@ char* code_list_getter(int index, int *list_size)
 
    return get_trouble_code(index)->code;
 }
-
 
 // Mfr./SAE/ISO ranges are defined in SAE J2012 standard
 int is_mfr_code(const char *code)
@@ -820,7 +806,6 @@ int is_mfr_code(const char *code)
    return TRUE;
 }
 
-
 int handle_num_of_codes(char *vehicle_response)
 {
    int temp;
@@ -844,7 +829,6 @@ int handle_num_of_codes(char *vehicle_response)
 
    return ret;
 }
-
 
 int parse_dtcs(const char *response, int pending)
 {
@@ -885,7 +869,6 @@ int parse_dtcs(const char *response, int pending)
    
    return dtc_count;
 }
-
 
 /* NOTE:
  *  ELM327 multi-message CAN responses are parsed using the following assumptions:
@@ -969,7 +952,6 @@ int handle_read_codes(char *vehicle_response, int pending)
    
    return dtc_count; // return the actual number of codes read
 }
-
 
 void populate_trouble_codes_list()
 {
@@ -1082,7 +1064,6 @@ void populate_trouble_codes_list()
    file_handle(0); // close the code definition file if it's still open
 }
 
-
 void handle_errors(int error, int operation)
 {
    static int retry_attempts = NUM_OF_RETRIES;
@@ -1126,7 +1107,6 @@ void handle_errors(int error, int operation)
    }
 }
 
-
 void swap_codes(TROUBLE_CODE *code1, TROUBLE_CODE *code2)
 {
    char temp_str[256];
@@ -1139,7 +1119,6 @@ void swap_codes(TROUBLE_CODE *code1, TROUBLE_CODE *code2)
    code2->pending = temp_int;
    strcpy(code2->code, temp_str);
 }
-
 
 void add_trouble_code(const TROUBLE_CODE * init_code)
 {
@@ -1166,7 +1145,6 @@ void add_trouble_code(const TROUBLE_CODE * init_code)
    trouble_codes->next = next;
 }
 
-
 TROUBLE_CODE *get_trouble_code(int index)
 {
    int i;
@@ -1182,7 +1160,6 @@ TROUBLE_CODE *get_trouble_code(int index)
    return trouble_code;
 }
 
-
 int get_number_of_codes()
 {
    TROUBLE_CODE *trouble_code = trouble_codes;
@@ -1196,7 +1173,6 @@ int get_number_of_codes()
    
    return ret;
 }
-
 
 void clear_trouble_codes()
 {
@@ -1215,7 +1191,6 @@ void clear_trouble_codes()
       trouble_codes = next;
    }
 }
-
 
 PACKFILE *file_handle(char code_letter)
 {

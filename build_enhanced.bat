@@ -13,7 +13,6 @@ REM Check if MinGW is available
 if not exist "C:\MinGW\bin\gcc.exe" (
     echo ERROR: MinGW GCC not found!
     echo Please run setup_build_environment.bat first
-    pause
     exit /b 1
 )
 
@@ -21,7 +20,6 @@ REM Check if Allegro is available
 if not exist "C:\MinGW\lib\liballeg.a" (
     echo ERROR: Allegro library not found!
     echo Please run setup_build_environment.bat first
-    pause
     exit /b 1
 )
 
@@ -69,5 +67,3 @@ if %ERRORLEVEL% == 0 (
     echo Check the error messages above.
     echo.
 )
-
-pause

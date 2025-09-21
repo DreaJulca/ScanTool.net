@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 #include "globals.h"
 #include "custom_gui.h"
@@ -6,6 +7,7 @@
 #include "options.h"
 #include "version.h"
 #include "about.h"
+#include "allegro_common.h"
 
 #define MSG_REFRESH  MSG_USER
 
@@ -61,7 +63,7 @@ static DIALOG thanks_dialog[] =
    { d_text_proc,       24,  108, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Dim Zegebart and Neil Townsend for the DZComm serial library", NULL, NULL },
    { d_text_proc,       24,  132, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Julien Cugniere for his Allegro dialog editor", NULL, NULL },
    { d_text_proc,       24,  156, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Eric Botcazou and Allegro mailing list folks for their tips and suggestions", NULL, NULL },
-   { d_text_proc,       24,  180, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Joaquín Mª López Muñoz (joaquin@tid.es) for listports library", NULL, NULL },
+   { d_text_proc,       24,  180, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Joaqun M Lpez Muoz (joaquin@tid.es) for listports library", NULL, NULL },
    { d_text_proc,       24,  204, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- All users who provided feedback and bug reports", NULL, NULL },
    { d_button_proc,     248, 235, 112, 40,  C_BLACK, C_DARK_YELLOW, 'c',  D_EXIT, 0,   0,   "&Close", NULL, NULL },
    { d_yield_proc,      0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,     NULL, NULL },
@@ -89,7 +91,6 @@ static DIALOG obd_info_dialog[] =
    { NULL,                 0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,              NULL, NULL }
 };
 
-
 int display_about()
 {
    strcpy(whatisit, "ScanTool.net is multi-platform, open-source software designed to work with the ElmScan and OBDLink families of OBD-II interfaces, our inexpensive alternatives to professional diagnostic scan tools.");
@@ -98,7 +99,6 @@ int display_about()
 
    return do_dialog(about_dialog, -1); // do the dialog
 }
-
 
 int logo_proc(int msg, DIALOG *d, int c)
 {
@@ -116,7 +116,6 @@ int logo_proc(int msg, DIALOG *d, int c)
    
    return d_bitmap_proc(msg, d, c);
 }
-
 
 int obd_info_proc(int msg, DIALOG *d, int c)
 {
@@ -166,7 +165,6 @@ int refresh_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 void clear_obd_info()
 {
    strcpy(obd_interface, "N/A");
@@ -174,7 +172,6 @@ void clear_obd_info()
    strcpy(obd_protocol, "N/A");
    strcpy(obd_system, "N/A");
 }
-
 
 void format_id_string(char *str)
 {
@@ -201,7 +198,6 @@ void format_id_string(char *str)
       str[7] = ' ';
    }
 }
-
 
 // OBD info getter states
 #define OBD_INFO_IDLE         0
@@ -674,7 +670,6 @@ int obd_info_getter_proc(int msg, DIALOG *d, int c)
    return D_O_K;
 }
 
-
 int thanks_proc(int msg, DIALOG *d, int c)
 {
    int ret = d_button_proc(msg, d, c);
@@ -691,7 +686,6 @@ int thanks_proc(int msg, DIALOG *d, int c)
    return ret;
 }
 
-
 int large_text_proc(int msg, DIALOG *d, int c)
 {
    if (msg == MSG_START)
@@ -699,7 +693,6 @@ int large_text_proc(int msg, DIALOG *d, int c)
 
    return d_text_proc(msg, d, c);
 }
-
 
 int about_this_computer_proc(int msg, DIALOG *d, int c)
 {
@@ -745,7 +738,6 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
          strcpy(processor_vendor, "an UMC");
       else
          strcpy(processor_vendor, "an unknown CPU vendor");
-
 
       if(!strcmp("GenuineIntel", cpu_vendor))
       {
@@ -959,8 +951,7 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
                break;
          }
       } // end of Cyrix block
-      
-      
+
       if(!strcmp("UMC UMC UMC", cpu_vendor))
       {
          if (cpu_family == 4)
@@ -971,7 +962,6 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
                strcpy(processor_model, " U5S");
          }
       }  // end of UMC block
-      
 
       if(strcmp("GenuineTMx86", cpu_vendor) == 0)
          if ((cpu_family == 5) && (cpu_model == 0))
@@ -980,7 +970,6 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
       if(strcmp("RISERISERISE", cpu_vendor) == 0)
          if ((cpu_family == 5) && ((cpu_model == 0) || (cpu_model == 1)))
             strcpy(processor_model, " mP6"); // end of Rise block
-            
 
       switch (os_type)
       {
@@ -1059,7 +1048,6 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
          default:
             strcpy(os_name, "Unknown OS");
       }
-
 
       sprintf(cpu_info_buf, "You have %s%s%s based computer (%i:%i),", processor_vendor, processor_family, processor_model, cpu_family, cpu_model);
       sprintf(os_type_buf, "running %s version %i.%i", os_name, os_version, os_revision);

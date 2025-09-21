@@ -1,3 +1,4 @@
+#include "allegro_common.h"
 #include <string.h>
 
 #include "globals.h"
@@ -7,6 +8,7 @@
 #include "error_handlers.h"
 #ifdef ALLEGRO_WINDOWS
    #include "get_port_names.h"
+#include "allegro_common.h"
 #else
    #define PORT_NAME_BUF_SIZE    5
 #endif
@@ -29,7 +31,6 @@ typedef struct
    int option_value;
 } OPTION_ELEMENT;
 
-
 static OPTION_ELEMENT option_metric = {METRIC};
 static OPTION_ELEMENT option_imperial = {IMPERIAL};
 static OPTION_ELEMENT option_british = {BRITISH};
@@ -41,7 +42,6 @@ static OPTION_ELEMENT option_baud_rate_115200 = {BAUD_RATE_115200};
 #endif
 static OPTION_ELEMENT option_windowed_mode = {WINDOWED_MODE};
 static OPTION_ELEMENT option_full_screen_mode = {FULL_SCREEN_MODE};
-
 
 static int option_element_proc(int msg, DIALOG *d, int c);
 static int save_options_proc(int msg, DIALOG *d, int c);
@@ -82,8 +82,6 @@ static char* comport_list_strings = NULL;
 static int* comport_list_numbers = NULL;
 static int comport_list_size = 0;
 
-
-
 int display_options()
 {
    if (display_mode & WINDOWED_MODE_SET)
@@ -93,7 +91,6 @@ int display_options()
    centre_dialog(options_dialog);
    return popup_dialog(options_dialog, -1);
 }
-
 
 char* listbox_getter(int index, int *list_size)
 {
@@ -105,7 +102,6 @@ char* listbox_getter(int index, int *list_size)
    else
       return comport_list_strings + index * PORT_NAME_BUF_SIZE;
 }
-
 
 int comport_list_proc(int msg, DIALOG *d, int c)
 {
@@ -142,7 +138,6 @@ int comport_list_proc(int msg, DIALOG *d, int c)
    
    return d_list_proc(msg, d, c);
 }
-
 
 int option_element_proc(int msg, DIALOG *d, int c)
 {
@@ -211,7 +206,6 @@ int option_element_proc(int msg, DIALOG *d, int c)
    return d_radio_proc(msg, d, c);
 }
 
-
 int save_options_proc(int msg, DIALOG *d, int c)
 {
    int ret;
@@ -263,7 +257,7 @@ int save_options_proc(int msg, DIALOG *d, int c)
                   display_mode &= ~FULLSCREEN_MODE_SUPPORTED;
             }
 
-            set_pallete(datafile[MAIN_PALETTE].dat);
+            allegro_set_palette(datafile[MAIN_PALETTE].dat);
             gui_fg_color = C_BLACK;  // set the foreground color
             gui_bg_color = C_WHITE;  // set the background color
             gui_mg_color = C_GRAY;   // set the disabled color
@@ -301,7 +295,6 @@ void load_program_options()
    else
       display_mode &= ~WINDOWED_MODE_SET;
 }
-
 
 void save_program_options()
 {
@@ -362,7 +355,6 @@ void fill_comport_list()
    
 #endif
 }
-
 
 void clear_comport_list()
 {
