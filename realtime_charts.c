@@ -6,6 +6,9 @@
 #include "sensors.h"
 #include "custom_gui.h"
 
+// Helper macro for min function
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 CHART_MANAGER chart_manager;
 static BITMAP *chart_buffer = NULL;
 static volatile int chart_timer_counter = 0;

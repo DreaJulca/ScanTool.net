@@ -1,4 +1,8 @@
-CC = gcc
+ifdef MINGDIR
+   CC = $(MINGDIR)/bin/mingw32-gcc
+else
+   CC = gcc
+endif
 
 ifdef DEBUGMODE
    CFLAGS = -g -Wall
@@ -22,8 +26,8 @@ ifdef MINGDIR
       LIBS = $(AL_LIBS)
    endif
    WINDRES = windres -I rc -O coff
-   CFLAGS += -mwindows
-   OBJ = scantool.res listports.o get_port_names.o
+   CFLAGS += -mwindows -I$(MINGDIR)/include
+   OBJ = listports.o get_port_names.o
    EXT = .exe
 else
    LIBS = -ldzcom $(AL_LIBS)
@@ -43,7 +47,7 @@ endif
 OBJ += main.o main_menu.o serial.o options.o sensors.o trouble_code_reader.o custom_gui.o error_handlers.o about.o reset.o
 
 # Enhanced diagnostic objects
-OBJ += ecu_programming.o advanced_diagnostics.o realtime_charts.o serial_enhanced.o main_menu_enhanced.o
+OBJ += ecu_programming.o advanced_diagnostics.o realtime_charts.o serial_enhanced.o main_menu_enhanced.o oil_cooler_sensors.o
 
 BIN = ScanTool.exe
 

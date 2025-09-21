@@ -1,7 +1,7 @@
 #include "windows.h"
 #include "version.h"
 
-// ALLEGRO_ICON ICON DISCARDABLE "scantool.ico"  // Commented out for build
+ALLEGRO_ICON ICON DISCARDABLE "scantool.ico"
 
 1 VERSIONINFO 
 FILEVERSION SCANTOOL_VERSION, SCANTOOL_SUB_VERSION, SCANTOOL_WIP_VERSION, 0

@@ -26,6 +26,27 @@
 #define TIMEOUT_CALIBRATION       15000  // 15 seconds for calibration
 #define TIMEOUT_SECURITY_ACCESS   5000   // 5 seconds for security access
 
+// UDS Service Identifiers (ISO 14229)
+#define UDS_DIAGNOSTIC_SESSION_CONTROL  0x10
+#define UDS_ECU_RESET                   0x11
+#define UDS_SECURITY_ACCESS             0x27
+#define UDS_COMMUNICATION_CONTROL       0x28
+#define UDS_TESTER_PRESENT              0x3E
+#define UDS_READ_DATA_BY_IDENTIFIER     0x22
+#define UDS_WRITE_DATA_BY_IDENTIFIER    0x2E
+#define UDS_INPUT_OUTPUT_CONTROL        0x2F
+#define UDS_ROUTINE_CONTROL             0x31
+#define UDS_REQUEST_DOWNLOAD            0x34
+#define UDS_REQUEST_UPLOAD              0x35
+#define UDS_TRANSFER_DATA               0x36
+#define UDS_REQUEST_TRANSFER_EXIT       0x37
+
+// UDS Session Types
+#define SESSION_DEFAULT                 0x01
+#define SESSION_PROGRAMMING             0x02
+#define SESSION_EXTENDED_DIAGNOSTIC     0x03
+#define SESSION_SAFETY_SYSTEM           0x04
+
 // CAN message structure for advanced protocols
 typedef struct {
     unsigned int id;           // CAN ID
