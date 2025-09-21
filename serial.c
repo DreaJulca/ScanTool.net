@@ -38,7 +38,7 @@ END_OF_STATIC_FUNCTION(serial_time_out_handler)
 void start_serial_timer(int delay)
 {
    stop_serial_timer();
-   install_int_ex(serial_time_out_handler, MSEC_TO_TIMER(delay));  // install the timer
+   install_int_ex(serial_time_out_handler, allegro_msec_to_timer(delay));  // install the timer
    serial_time_out = FALSE;
    serial_timer_running = TRUE;
 }

@@ -262,6 +262,7 @@ int popup_dialog(DIALOG *dialog, int focus_obj);
 int install_int_ex(void (*proc)(void), int speed);
 int install_int(void (*proc)(void), int speed);
 void remove_int(void (*proc)(void));
+int allegro_msec_to_timer(int milliseconds);
 #endif
 
 // Graphics functions
@@ -306,7 +307,7 @@ void simulate_keypress(int key);
 
 // GUI text functions
 #ifndef ALLEGRO_IMPL_C
-void gui_textout_ex(BITMAP *bmp, const void *font, const char *s, int x, int y, int fg, int bg, int center);
+void gui_textout_ex(BITMAP *bmp, const char *s, int x, int y, int fg, int bg, int center);
 int gui_strlen(const char *s);
 #endif
 
@@ -342,10 +343,12 @@ int alert3(const char *s1, const char *s2, const char *s3,
     int itofix(int x);
     #endif
 
-    // Debug macro (always available)
-    #ifndef ASSERT
-    #define ASSERT(condition) ((void)0)
+    // Debug function
+    void assert_function(int condition);
+    #ifdef ASSERT
+    #undef ASSERT
     #endif
+    #define ASSERT(condition) assert_function(condition)
 
 // Config functions  
 int get_config_int(const char *section, const char *name, int def);

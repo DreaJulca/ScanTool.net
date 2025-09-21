@@ -1,5 +1,4 @@
 #include "realtime_charts.h"
-#include "scantool.h"
 #include <stdio.h>
 #include <stdlib.h>
 

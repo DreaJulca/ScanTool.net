@@ -63,6 +63,17 @@ int allegro_install_mouse(void) {
     return install_mouse();
 }
 
+// Timer conversion function
+int allegro_msec_to_timer(int milliseconds) {
+    return (int)(milliseconds * 1.193182);
+}
+
+// Debug function
+void assert_function(int condition) {
+    // Simple assert implementation - just ignore for now
+    (void)condition;
+}
+
 // Cleanup Allegro system
 void cleanup_allegro_system(void) {
     allegro_exit();
