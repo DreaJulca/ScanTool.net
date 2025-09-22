@@ -106,6 +106,11 @@ int reset_engine_oil_service_interval(void);
 int reset_transmission_service_interval(void);
 int reset_brake_service_interval(void);
 int reset_general_inspection_interval(void);
+int reset_coolant_service_interval(void);
+int reset_general_service_interval(int service_type);
+
+// DPF regeneration function
+int perform_dpf_regeneration(void);
 
 // Utility functions
 int verify_vehicle_compatibility(int procedure_id);

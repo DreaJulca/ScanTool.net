@@ -10,7 +10,7 @@
 
 ECU_PROG_SESSION current_prog_session;
 
-// Available calibration procedures
+// Available calibration procedures (for future implementation)
 static CALIBRATION_ITEM calibration_items[] = {
     { DID_INJECTOR_FLOW_RATE, "Injector Flow Rate Coding", NULL, 1, SESSION_EXTENDED_DIAGNOSTIC },
     { DID_THROTTLE_MIN_POSITION, "Throttle Body Min Position", NULL, 1, SESSION_EXTENDED_DIAGNOSTIC },
@@ -21,8 +21,12 @@ static CALIBRATION_ITEM calibration_items[] = {
     { 0, "", NULL, 0, 0 }
 };
 
-// Dialog procedures
-static int programming_menu_proc(int msg, DIALOG *d, int c);
+// Helper function to suppress unused variable warning
+void suppress_unused_calibration_items(void) {
+    (void)calibration_items;
+}
+
+// Function forward declarations
 static int injector_coding_proc(int msg, DIALOG *d, int c);
 static int throttle_calib_proc(int msg, DIALOG *d, int c);
 static int steering_calib_proc(int msg, DIALOG *d, int c);
@@ -289,7 +293,8 @@ int uds_read_data_by_identifier(unsigned short did, unsigned char *data, int *le
     request[2] = did & 0xFF;
     
     // Send request and receive response
-    // This is a simplified implementation
+    // This is a simplified implementation - request would be sent to ECU
+    (void)request;  // Mark as used to avoid warning
     *length = 4; // Example length
     data[0] = 0x11; data[1] = 0x22; data[2] = 0x33; data[3] = 0x44; // Example data
     

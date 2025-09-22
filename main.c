@@ -9,6 +9,22 @@
 #include "serial.h"
 #include "version.h"
 
+// Global variable definitions (declared in globals.h)
+int is_not_genuine_scan_tool;
+int system_of_measurements;
+int display_mode;
+int enhanced_mode_enabled;
+int realtime_charts_enabled;
+int advanced_diagnostics_enabled;
+char options_file_name[20];
+char data_file_name[20];
+char code_defs_file_name[20];
+char log_file_name[20];
+#ifdef LOG_COMMS
+char comm_log_file_name[20];
+#endif
+DATAFILE *datafile;
+
 #if (defined ALLEGRO_DOS) || (defined ALLEGRO_STATICLINK)
 // Define color depths used
 BEGIN_COLOR_DEPTH_LIST
@@ -42,7 +58,7 @@ void write_comm_log(const char *marker, const char *data)
 }
 #endif
 
-static void init()
+static int init()
 {
    char temp_buf[256];
 
@@ -94,7 +110,7 @@ static void init()
    display_mode |= FULLSCREEN_MODE_SUPPORTED;
    
    write_log("\nTrying Windowed Graphics Mode... ");
-   if (allegro_set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0) == 0)
+   if (scantool_set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0) == 0)
    {
       display_mode |= WINDOWED_MODE_SUPPORTED;
       write_log("OK");
@@ -108,7 +124,7 @@ static void init()
    if (!(display_mode & WINDOWED_MODE_SET))
    {
       write_log("\nTrying Full Screen Graphics Mode... ");
-      if (allegro_set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, 640, 480, 0, 0) == 0)
+      if (scantool_set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, 640, 480, 0, 0) == 0)
       {
          display_mode |= FULLSCREEN_MODE_SUPPORTED;
          write_log("OK");
@@ -124,7 +140,7 @@ static void init()
       fatal_error(allegro_get_error());
    else if ((display_mode & WINDOWED_MODE_SUPPORTED) && !(display_mode & FULLSCREEN_MODE_SUPPORTED))
    {
-      allegro_set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
+      scantool_set_gfx_mode(GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0);
       display_mode &= WINDOWED_MODE_SET;
    }
    
@@ -169,6 +185,8 @@ static void init()
          write_log("Unknown Status");
          break;
    }
+   
+   return 0; // Success
 }
 
 static void shut_down()
@@ -208,7 +226,11 @@ int main()
    write_log(temp_buf);
 
    write_log("\n\nInitializing All Modules...\n---------------------------");
-   init(); // initialize everything
+   if (init() != 0) // initialize everything
+   {
+      write_log("\nInitialization failed!");
+      return EXIT_FAILURE;
+   }
 
    write_log("\n\nDisplaying Main Menu...\n-----------------------");
    display_main_menu(); // dislpay main menu

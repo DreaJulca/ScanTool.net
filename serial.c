@@ -4,6 +4,11 @@
 #include "allegro_common.h"
 #include "serial.h"
 
+// Serial module variable definitions
+volatile int serial_time_out;
+volatile int serial_timer_running;
+struct COMPORT comport;
+
 // For Windows MinGW builds, we use Windows API directly
 #ifdef ALLEGRO_WINDOWS
    // Define processor architecture before including Windows headers
@@ -30,8 +35,8 @@
 //timer interrupt handler for sensor data
 static void serial_time_out_handler()
 {
-   serial_time_out = TRUE;
-   serial_timer_running = FALSE;
+   serial_time_out = 1;  // TRUE
+   serial_timer_running = 0;  // FALSE
 }
 END_OF_STATIC_FUNCTION(serial_time_out_handler)
 
@@ -52,9 +57,7 @@ void stop_serial_timer()
 
 void serial_module_init()
 {
-#ifndef ALLEGRO_WINDOWS
-   dzcomm_init();
-#endif
+   // dzcomm not used in Windows MinGW builds
    serial_timer_running = FALSE;
    /* all variables and code used inside interrupt handlers must be locked */
    LOCK_VARIABLE(serial_time_out);
@@ -141,17 +144,9 @@ int open_comport()
       return -1;
    }
 #else
-   com_port = comm_port_init(comport.number);
-   comm_port_set_baud_rate(com_port, comport.baud_rate);
-   comm_port_set_parity(com_port, NO_PARITY);
-   comm_port_set_data_bits(com_port, BITS_8);
-   comm_port_set_stop_bits(com_port, STOP_1);
-   comm_port_set_flow_control(com_port, NO_CONTROL);
-   if (comm_port_install_handler(com_port) != 1)
-   {
-      comport.status = NOT_OPEN; //port was not open
-      return -1; // return error
-   }
+   // Non-Windows dzcomm implementation not used in this build
+   comport.status = NOT_OPEN;
+   return -1;
 #endif
    
    serial_time_out = FALSE;
@@ -168,9 +163,7 @@ void close_comport()
       PurgeComm(com_port, PURGE_TXCLEAR|PURGE_RXCLEAR);
       CloseHandle(com_port);
 #else
-      comm_port_flush_output(com_port);
-      comm_port_flush_input(com_port);
-      comm_port_uninstall(com_port);
+      // Non-Windows dzcomm implementation not used in this build
 #endif
    }
    comport.status = NOT_OPEN;
@@ -196,9 +189,8 @@ void send_command(const char *command)
       return;
    }
 #else
-   comm_port_flush_output(com_port);
-   comm_port_flush_input(com_port);
-   comm_port_string_send(com_port, tx_buf);
+   // Non-Windows dzcomm implementation not used in this build
+   // Just do nothing - serial communication will not work on non-Windows
 #endif
    
 #ifdef LOG_COMMS
@@ -228,12 +220,8 @@ int read_comport(char *response)
          response[j++] = response[i];
    response[j] = 0;
 #else
-   char c;
-   
+   // Non-Windows dzcomm implementation not used in this build
    i = 0;
-   while((c = comm_port_test(com_port)) >= 0) // while the serial buffer is not empty, read comport
-      if (c > 0)
-         response[i++] = c;
    response[i] = 0;
 #endif
    
@@ -363,7 +351,7 @@ int process_response(const char *cmd_sent, char *msg_received)
                return RUBBISH;
          }
          msg_received[i] = *msg; // rewrite response
-         if (!isxdigit(*msg) && *msg != ':')
+         if (!isxdigit((unsigned char)*msg) && *msg != ':')
             is_hex_num = FALSE;
          i++;
       }

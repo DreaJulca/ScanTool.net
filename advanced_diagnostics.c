@@ -2,16 +2,20 @@
 #include "enhanced_communication.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "globals.h"
 #include "advanced_diagnostics.h"
 #include "ecu_programming.h"
 #include "serial_enhanced.h"
 #include "custom_gui.h"
 
-// Windows Sleep function declaration (to avoid including windows.h which conflicts with Allegro)
-#ifdef _WIN32
-extern void __stdcall Sleep(unsigned long dwMilliseconds);
-#endif
+// Simple delay function to avoid Windows API dependency
+void delay_milliseconds(int ms) {
+    clock_t start = clock();
+    while ((clock() - start) * 1000 / CLOCKS_PER_SEC < ms) {
+        // Busy wait
+    }
+}
 
 DIAGNOSTIC_SESSION current_diagnostic_session;
 
@@ -46,9 +50,7 @@ SERVICE_RESET_ITEM available_services[] = {
 };
 
 // Dialog procedures
-static int diagnostics_menu_proc(int msg, DIALOG *d, int c);
 static int procedure_button_proc(int msg, DIALOG *d, int c);
-static int maintenance_menu_proc(int msg, DIALOG *d, int c);
 static int service_reset_proc(int msg, DIALOG *d, int c);
 
 // Advanced diagnostics menu dialog
@@ -440,7 +442,7 @@ int perform_throttle_body_calibration(void)
             // Implementation would parse response for completion status
             break;
         }
-        Sleep(1000); // Wait 1 second (Windows API)
+        delay_milliseconds(1000); // Wait 1 second
     }
     
     return 1; // Success

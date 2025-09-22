@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <stdlib.h>
 #include "globals.h"
 #include "serial.h"
 #include "options.h"
@@ -885,7 +886,7 @@ int handle_read_codes(char *vehicle_response, int pending)
 {
    int dtc_count = 0;
    char *start = vehicle_response;
-   char filter[3];
+   char filter[16];  // Increased buffer size to handle large hex numbers plus colon
    char msg[48];
    int can_resp_cnt = 0;
    int can_msg_cnt = 0;
@@ -1111,6 +1112,9 @@ void swap_codes(TROUBLE_CODE *code1, TROUBLE_CODE *code2)
 {
    char temp_str[256];
    int temp_int;
+   
+   // Avoid same-source/dest warnings by checking pointers
+   if (code1 == code2) return;  // Nothing to swap
    
    temp_int = code1->pending;
    strcpy(temp_str, code1->code);

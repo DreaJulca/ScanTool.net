@@ -22,38 +22,27 @@
 // Password for Datafiles (Tr. Code Definitions and Resources)
 #define PASSWORD NULL
 
-// Colors in the main palette
-#define C_TRANSP       -1
-#define C_BLACK         0
-#define C_WHITE         1
-#define C_RED           255
-#define C_BLUE          254
-#define C_GREEN         99
-#define C_DARK_YELLOW   54
-#define C_PURPLE        9
-#define C_DARK_GRAY     126
-#define C_GRAY          50
-#define C_LIGHT_GRAY    55
+// Colors are now defined in allegro_common.h to avoid conflicts
 
 //
-int is_not_genuine_scan_tool;
+extern int is_not_genuine_scan_tool;
 
 // Options
-int system_of_measurements;
-int display_mode;
+extern int system_of_measurements;
+extern int display_mode;
 
 // Enhanced features flags
-int enhanced_mode_enabled;
-int realtime_charts_enabled;
-int advanced_diagnostics_enabled;
+extern int enhanced_mode_enabled;
+extern int realtime_charts_enabled;
+extern int advanced_diagnostics_enabled;
 
 // File names
-char options_file_name[20];
-char data_file_name[20];
-char code_defs_file_name[20];
-char log_file_name[20];
+extern char options_file_name[20];
+extern char data_file_name[20];
+extern char code_defs_file_name[20];
+extern char log_file_name[20];
 #ifdef LOG_COMMS
-char comm_log_file_name[20];
+extern char comm_log_file_name[20];
 #endif
 
 void write_log(const char *log_string);
@@ -62,6 +51,6 @@ void write_log(const char *log_string);
 void write_comm_log(const char *marker, const char *data);
 #endif
 
-DATAFILE *datafile;
+extern DATAFILE *datafile;
 
 #endif

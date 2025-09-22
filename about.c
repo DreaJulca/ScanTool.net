@@ -1,5 +1,6 @@
 #include "allegro_common.h"
 #include <string.h>
+#include <stdlib.h>
 #include "globals.h"
 #include "custom_gui.h"
 #include "serial.h"
@@ -696,7 +697,7 @@ int large_text_proc(int msg, DIALOG *d, int c)
 
 int about_this_computer_proc(int msg, DIALOG *d, int c)
 {
-   char cpu_info_buf[96];
+   char cpu_info_buf[256];  // Increased buffer size to handle long strings
    char os_type_buf[96];
    char os_name[32];
    char processor_vendor[64];

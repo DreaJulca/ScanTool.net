@@ -74,6 +74,9 @@
     extern FONT *font;
     extern int gui_fg_color, gui_bg_color, gui_mg_color;
     
+    // Serial communication functions
+    int serial_port_opened(void);
+    
     // Platform detection
     #ifdef _WIN32
     #define ALLEGRO_WINDOWS
@@ -174,11 +177,39 @@
     #ifndef C_BLACK
     #define C_BLACK                    0
     #endif
+    // Colors in the main palette (matching original ScanTool values)
+    #ifndef C_TRANSP
+    #define C_TRANSP                   -1
+    #endif
+    #ifndef C_BLACK
+    #define C_BLACK                    0
+    #endif
     #ifndef C_WHITE
-    #define C_WHITE                    255  
+    #define C_WHITE                    1
+    #endif
+    #ifndef C_RED
+    #define C_RED                      255
+    #endif
+    #ifndef C_BLUE
+    #define C_BLUE                     254
+    #endif
+    #ifndef C_GREEN
+    #define C_GREEN                    99
+    #endif
+    #ifndef C_DARK_YELLOW
+    #define C_DARK_YELLOW              54
+    #endif
+    #ifndef C_PURPLE
+    #define C_PURPLE                   9
+    #endif
+    #ifndef C_DARK_GRAY
+    #define C_DARK_GRAY                126
+    #endif
+    #ifndef C_GRAY
+    #define C_GRAY                     50
     #endif
     #ifndef C_LIGHT_GRAY
-    #define C_LIGHT_GRAY               192
+    #define C_LIGHT_GRAY               55
     #endif
     
     // Key constants
@@ -232,13 +263,14 @@ int allegro_install_keyboard(void);
 int allegro_install_mouse(void);
 
 // Wrapper functions for Allegro functionality (always available)
-int allegro_set_gfx_mode(int card, int w, int h, int v_w, int v_h);
-void allegro_set_color_depth(int depth);
-int allegro_readkey(void);
-void allegro_yield_timeslice(void);
-int allegro_alert(const char *s1, const char *s2, const char *s3, 
-                  const char *b1, const char *b2, int c1, int c2);
-int allegro_do_dialog(DIALOG *dialog, int focus_obj);
+int scantool_set_gfx_mode(int card, int w, int h, int v_w, int v_h);
+void scantool_set_color_depth(int depth);
+int scantool_readkey(void);
+void scantool_yield_timeslice(void);
+int scantool_alert(const char *s1, const char *s2, const char *s3, 
+                   const char *b1, const char *b2, int c1, int c2);
+void scantool_message(const char *msg);
+int scantool_do_dialog(DIALOG *dialog, int focus_obj);
 int allegro_popup_dialog(DIALOG *dialog, int focus_obj);
 
 // Dialog procedures
@@ -250,6 +282,7 @@ int d_text_proc(int msg, DIALOG *d, int c);
 int d_yield_proc(int msg, DIALOG *d, int c);
 int d_box_proc(int msg, DIALOG *d, int c);
 int d_shadow_box_proc(int msg, DIALOG *d, int c);
+int d_check_proc(int msg, DIALOG *d, int c);
 
 // GUI utility functions
 int alert(const char *s1, const char *s2, const char *s3, const char *b1, const char *b2, int c1, int c2);
@@ -318,16 +351,12 @@ int object_message(DIALOG *dialog, int msg, int c);
 int alert3(const char *s1, const char *s2, const char *s3, 
            const char *b1, const char *b2, const char *b3, int c1, int c2, int c3);
 
-    // Global string constant
+    // These globals are provided by Allegro directly (declare as extern for use)
     extern char empty_string[];
-    
-    // OS information variables
     extern int os_type;
     extern int os_version;
     extern int os_revision;
     extern const char *os_name;
-
-    // CPU information variables
     extern char cpu_vendor[];
     extern int cpu_family;
     extern int cpu_model;
@@ -363,6 +392,7 @@ int pack_feof(PACKFILE *f);
 int pack_fclose(PACKFILE *f);
 int pack_fread(void *p, int n, PACKFILE *f);
 int pack_fwrite(const void *p, int n, PACKFILE *f);
+int pack_getc(PACKFILE *f);
 #endif
 
 // Allegro system access functions

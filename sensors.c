@@ -1,5 +1,6 @@
 #include "allegro_common.h"
 #include <string.h>
+#include <stdlib.h>
 #include "globals.h"
 #include "serial.h"
 #include "options.h"

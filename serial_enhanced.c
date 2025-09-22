@@ -83,7 +83,7 @@ int kwp2000_send_request(unsigned char service, unsigned char *data, int length)
 {
     // KWP2000 message format
     unsigned char message[256];
-    message[0] = 0x80 | length + 1; // Format byte
+    message[0] = 0x80 | (length + 1); // Format byte
     message[1] = service;
     
     if (data && length > 0) {
@@ -308,7 +308,9 @@ int receive_can_message(CAN_MESSAGE *msg, int timeout_ms)
                     msg->length = 0;
                     
                     while (*data_start && msg->length < 8) {
-                        if (sscanf(data_start, "%02X", &msg->data[msg->length]) == 1) {
+                        unsigned int temp;
+                        if (sscanf(data_start, "%02X", &temp) == 1) {
+                            msg->data[msg->length] = (unsigned char)temp;
                             msg->length++;
                             data_start += 3; // Move past "XX "
                         } else {

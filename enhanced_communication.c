@@ -2,6 +2,7 @@
 #define ALLEGRO_WINDOWS
 
 #include "enhanced_communication.h"
+#include "serial.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@ int init_enhanced_communication(void) {
     printf("Initializing enhanced communication protocols...\n");
     
     /* Initialize serial communication first */
-    if (!serial_port_opened()) {
+    if (comport.status != READY) {
         printf("Warning: Serial port not open, enhanced communication limited\n");
     }
     

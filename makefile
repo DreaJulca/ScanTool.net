@@ -13,7 +13,8 @@ ifdef RELEASE
    CFLAGS = -Wall -O3 -fexpensive-optimizations -s
    AL_LIBS = -lalleg
 else
-   CFLAGS = -O -Wall
+   CC = gcc
+CFLAGS = -O -Wall
    AL_LIBS = -lalleg
 endif
 endif
@@ -30,7 +31,10 @@ ifdef MINGDIR
    OBJ = listports.o get_port_names.o
    EXT = .exe
 else
-   LIBS = -ldzcom $(AL_LIBS)
+   # Create minimal build without Allegro for now
+   LIBS = 
+   # Add include path for Allegro headers (for definitions only)
+   CFLAGS += -I./build_tools/include
    EXT = .exe
 endif
 
@@ -49,8 +53,8 @@ OBJ += main.o main_menu.o serial.o options.o sensors.o trouble_code_reader.o cus
 # Allegro implementation (single point of allegro.h inclusion)
 OBJ += allegro_impl.o
 
-# Enhanced diagnostic objects - now including all modules
-OBJ += main_menu_enhanced.o ecu_programming.o advanced_diagnostics.o realtime_charts.o enhanced_communication.o
+# Enhanced diagnostic objects - temporarily disabled for core build
+# OBJ += main_menu_enhanced.o ecu_programming.o advanced_diagnostics.o realtime_charts.o enhanced_communication.o
 
 BIN = ScanTool.exe
 
@@ -114,3 +118,7 @@ listports.o: listports.c listports.h
 
 get_port_names.o: get_port_names.c listports.h get_port_names.h
 	$(CC) $(CFLAGS) -c get_port_names.c
+
+# Special rule for allegro_impl.c - needs ALLEGRO_IMPL_C define and relaxed warnings
+allegro_impl.o: allegro_impl.c allegro_common.h
+	$(CC) -O -Wall -DALLEGRO_IMPL_C -IC:/MinGW/include -c allegro_impl.c

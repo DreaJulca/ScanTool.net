@@ -1,7 +1,11 @@
 #include "allegro_common.h"
 #include <string.h>
+#include <stdlib.h>
 #include "globals.h"
 #include "error_handlers.h"
+
+// Error handlers global variable definitions
+char temp_error_buf[256];
 
 void fatal_error(const char *msg)
 {
@@ -17,7 +21,7 @@ void fatal_error(const char *msg)
    strcat(temp_buf, "\n\t- CPU type/speed, i.e. \"Pentium 100Mhz\"");
    strcat(temp_buf, "\n\t- OS, i.e. \"Windows 95\"");
    strcat(temp_buf, "\n\t- Total amount of RAM installed, i.e. \"4Mb\"\n\n");
-   allegro_message(temp_buf);
+   scantool_message(temp_buf);
    
    exit(EXIT_FAILURE);
 }

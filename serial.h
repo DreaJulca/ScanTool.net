@@ -7,11 +7,11 @@
    #define BAUD_RATE_115200  115200
    #define BAUD_RATE_230400  230400
 #else
-   #define DZCOMM_SECONDARY_INCLUDE
-   #include <dzcomm.h>
-   #define BAUD_RATE_9600    _9600
-   #define BAUD_RATE_38400   _38400
-   #define BAUD_RATE_115200  _115200
+   // Fallback for non-Windows systems (dzcomm not available in MinGW)
+   #define BAUD_RATE_9600    9600
+   #define BAUD_RATE_38400   38400
+   #define BAUD_RATE_115200  115200
+   #define BAUD_RATE_230400  230400
 #endif
 
 //read_comport returned data type
@@ -71,10 +71,10 @@ const char *get_protocol_string(int interface_type, int protocol_id);
 int display_error_message(int error, int retry);
 
 // variables
-volatile int serial_time_out;
-volatile int serial_timer_running;
+extern volatile int serial_time_out;
+extern volatile int serial_timer_running;
 
-struct COMPORT {
+extern struct COMPORT {
    int number;
    int baud_rate;
    int status;    // READY, NOT_OPEN, USER_IGNORED

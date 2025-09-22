@@ -1,5 +1,6 @@
 #include "allegro_common.h"
 #include <string.h>
+#include <stdlib.h>
 
 #include "globals.h"
 #include "custom_gui.h"
@@ -13,7 +14,7 @@
    #define PORT_NAME_BUF_SIZE    5
 #endif
 
-#define MSG_SAVE_OPTIONS   MSG_USER
+// Use already defined MSG_SAVE_OPTIONS from allegro_common.h
 #define MSG_REFRESH        MSG_USER + 1
 
 // Define defaults
@@ -342,14 +343,14 @@ void fill_comport_list()
    for (i = 0; i < 8; i++)
       sprintf(comport_list_strings + i * PORT_NAME_BUF_SIZE, "COM%i", i + 1);
    
-   comport_list_numbers[0] = _com1;
-   comport_list_numbers[1] = _com2;
-   comport_list_numbers[2] = _com3;
-   comport_list_numbers[3] = _com4;
-   comport_list_numbers[4] = _com5;
-   comport_list_numbers[5] = _com6;
-   comport_list_numbers[6] = _com7;
-   comport_list_numbers[7] = _com8;
+   comport_list_numbers[0] = 0;  // COM1 = port 0
+   comport_list_numbers[1] = 1;  // COM2 = port 1
+   comport_list_numbers[2] = 2;  // COM3 = port 2
+   comport_list_numbers[3] = 3;  // COM4 = port 3
+   comport_list_numbers[4] = 4;  // COM5 = port 4
+   comport_list_numbers[5] = 5;  // COM6 = port 5
+   comport_list_numbers[6] = 6;  // COM7 = port 6
+   comport_list_numbers[7] = 7;  // COM8 = port 7
    
    comport_list_size = 8;
    

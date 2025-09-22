@@ -5,36 +5,36 @@
  * All other files should only include allegro_common.h for forward declarations
  */
 
-#define ALLEGRO_IMPL_C
+// ALLEGRO_IMPL_C is defined by the makefile
 #include "allegro_common.h"
 #include <stdio.h>
 
 // This is the ONLY place where we include the full Allegro header
 // All inline functions will be defined here and only here
 
-// Global variables that other files expect
-BITMAP *screen = NULL;
-DATAFILE *datafile = NULL; 
-FONT *font = NULL;
-int gui_fg_color = 0;
-int gui_bg_color = 15;
-int gui_mg_color = 8;
+// Global variables that other files expect - Remove conflicts with Allegro
+// BITMAP *screen - provided by Allegro directly
+// DATAFILE *datafile - now defined in main.c, accessible through globals.h
+// FONT *font - provided by Allegro directly
+// int gui_fg_color - provided by Allegro directly
+// int gui_bg_color - provided by Allegro directly  
+// int gui_mg_color - provided by Allegro directly
 int allegro_screen_w = 640;    // Default screen width
 int allegro_screen_h = 480;    // Default screen height
 
-// String constants
-char empty_string[] = "";
+// String constants - Remove conflicts
+// char empty_string[] - provided by Allegro directly
 
-// OS information variables
-int os_type = OSTYPE_UNKNOWN;
-int os_version = 0;
-int os_revision = 0;
-const char *os_name = "Unknown";
+// OS information variables - Remove conflicts  
+// int os_type - provided by Allegro directly
+// int os_version - provided by Allegro directly
+// int os_revision - provided by Allegro directly
+// const char *os_name - provided by Allegro directly
 
-// CPU information variables
-char cpu_vendor[32] = "Unknown";
-int cpu_family = 0;
-int cpu_model = 0;
+// CPU information variables - Remove conflicts
+// char cpu_vendor[] - provided by Allegro directly  
+// int cpu_family - provided by Allegro directly
+// int cpu_model - provided by Allegro directly
 
 // Initialize Allegro system
 int init_allegro_system(void) {
@@ -100,7 +100,7 @@ int serial_port_opened(void) {
 // Wrapper functions for commonly used Allegro functions
 // These allow other files to call Allegro functions without including allegro.h
 
-int allegro_set_gfx_mode(int card, int w, int h, int v_w, int v_h) {
+int scantool_set_gfx_mode(int card, int w, int h, int v_w, int v_h) {
     int result = set_gfx_mode(card, w, h, v_w, v_h);
     if (result == 0 && screen) {
         allegro_screen_w = screen->w;
@@ -109,24 +109,24 @@ int allegro_set_gfx_mode(int card, int w, int h, int v_w, int v_h) {
     return result;
 }
 
-void allegro_set_color_depth(int depth) {
+void scantool_set_color_depth(int depth) {
     set_color_depth(depth);
 }
 
-int allegro_readkey(void) {
+int scantool_readkey(void) {
     return readkey();
 }
 
-void allegro_yield_timeslice(void) {
-    yield_timeslice();
+void scantool_yield_timeslice(void) {
+    rest(1);  // Use rest() instead of deprecated yield_timeslice()
 }
 
-int allegro_alert(const char *s1, const char *s2, const char *s3, 
-                  const char *b1, const char *b2, int c1, int c2) {
+int scantool_alert(const char *s1, const char *s2, const char *s3, 
+                   const char *b1, const char *b2, int c1, int c2) {
     return alert(s1, s2, s3, b1, b2, c1, c2);
 }
 
-int allegro_do_dialog(DIALOG *dialog, int focus_obj) {
+int scantool_do_dialog(DIALOG *dialog, int focus_obj) {
     return do_dialog(dialog, focus_obj);
 }
 
@@ -250,4 +250,25 @@ void allegro_gui_textout_ex(BITMAP *bmp, const FONT *f, const char *s,
                            int x, int y, int color, int bg, int centre) {
     // Allegro's gui_textout_ex doesn't take a font parameter - it uses the current font
     gui_textout_ex(bmp, s, x, y, color, bg, centre);
+}
+
+// Dialog procedure functions (simple redirects to Allegro's versions)
+int d_check_proc(int msg, DIALOG *d, int c) {
+    // For now, just return a simple implementation
+    // This would normally be Allegro's d_check_proc
+    return D_O_K;
+}
+
+// Pack file functions that might be missing
+int pack_getc(PACKFILE *f) {
+    char c;
+    if (pack_fread(&c, 1, f) == 1) {
+        return (unsigned char)c;
+    }
+    return EOF;
+}
+
+// Message function
+void scantool_message(const char *msg) {
+    scantool_alert(msg, "", "", "OK", "", 0, 0);
 }
