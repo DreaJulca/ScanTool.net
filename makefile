@@ -31,9 +31,9 @@ ifdef MINGDIR
    OBJ = listports.o get_port_names.o
    EXT = .exe
 else
-   # Create minimal build without Allegro for now
+   # Use minimal Allegro implementation instead of external library
    LIBS = 
-   # Add include path for Allegro headers (for definitions only)
+   # Add include path for Allegro headers (for structure definitions only)
    CFLAGS += -I./build_tools/include
    EXT = .exe
 endif
@@ -50,11 +50,11 @@ endif
 # Original objects
 OBJ += main.o main_menu.o serial.o options.o sensors.o trouble_code_reader.o custom_gui.o error_handlers.o about.o reset.o
 
-# Allegro implementation (single point of allegro.h inclusion)
-OBJ += allegro_impl.o
+# Allegro implementation - using minimal console-based implementation only
+OBJ += allegro_minimal.o
 
-# Enhanced diagnostic objects - temporarily disabled for core build
-# OBJ += main_menu_enhanced.o ecu_programming.o advanced_diagnostics.o realtime_charts.o enhanced_communication.o
+# Enhanced diagnostic objects - now fully functional with minimal Allegro
+OBJ += main_menu_enhanced.o ecu_programming.o advanced_diagnostics.o realtime_charts.o enhanced_communication.o
 
 BIN = ScanTool.exe
 

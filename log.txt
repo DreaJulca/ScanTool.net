@@ -1,0 +1,23 @@
+Sun Sep 21 20:58:42 2025
+Version: 1.21 for DOS
+
+Initializing All Modules...
+---------------------------
+Initializing Allegro... OK
+Installing Mouse... OK
+Loading Preferences... OK
+Trying Windowed Graphics Mode... OK
+Trying Full Screen Graphics Mode... OK
+Loading Data File... OK
+Initializing Serial Module... OK
+Opening COM0... Error!
+
+Displaying Main Menu...
+-----------------------
+Main Menu Closed
+
+Shutting Down All Modules...
+----------------------------
+Shutting Down Serial Module... OK
+Unloading Data File... OK
+Shutting Down Allegro... OK
