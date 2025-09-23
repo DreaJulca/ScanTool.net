@@ -8,14 +8,16 @@
 #include "custom_gui.h"
 #include "reset.h"
 #include "main_menu.h"
+#include "constants.h"
+#include "numeric_constants.h"
 
 #define LOGO                       1
 #define INEXPENSIVE_ALTERNATIVES   2
 #define SUNFIRE                    3
 #define READ_CODES                 5
 #define SENSOR_DATA                6
-#define FREEZE_FRAME               7
-#define TESTS                      8
+#define FREEZE_FRAME               MENU_ITEM_FREEZE_FRAME
+#define TESTS                      MENU_ITEM_TESTS
 #define OPTIONS                    9
 #define ABOUT                      10
 #define EXIT                       11
