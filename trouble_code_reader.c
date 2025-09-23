@@ -9,7 +9,8 @@
 #include "custom_gui.h"
 #include "error_handlers.h"
 #include "trouble_code_reader.h"
-#include "allegro_common.h"
+#include "constants.h"
+#include "numeric_constants.h"
 
 #define MSG_READ_CODES    MSG_USER
 #define MSG_CLEAR_CODES   MSG_USER+1

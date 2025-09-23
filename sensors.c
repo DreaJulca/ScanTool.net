@@ -8,13 +8,14 @@
 #include "sensors.h"
 #include "custom_gui.h"
 #include "reset.h"
-#include "allegro_common.h"
+#include "constants.h"
+#include "numeric_constants.h"
 
 #define MSG_TOGGLE   MSG_USER
 #define MSG_UPDATE   MSG_USER + 1
 #define MSG_REFRESH  MSG_USER + 2
 
-#define SENSORS_PER_PAGE      9
+#define SENSORS_PER_PAGE      SENSOR_PAGE_SIZE
 #define NUM_OF_RETRIES        2
 #define SENSORS_TO_TIME_OUT   1 //number of sensors that need to time out before the warning will be issued
 #define REFRESH_RATE_PRECISION 10 // how often the samples are taken, in milliseconds
@@ -112,54 +113,54 @@ static volatile int refresh_time; // time between sensor updates
 static SENSOR sensors[] =
 {
    // formula                        // label            //screen_buffer  //pid  //enabled // bytes
-   { throttle_position_formula,     "Absolute Throttle Position:",     "", "11",      0,    1 },
-   { engine_rpm_formula,            "Engine RPM:",                     "", "0C",      -1,   2 },
+   { throttle_position_formula,     STR_SENSOR_THROTTLE_POS,     "", "11",      0,    1 },
+   { engine_rpm_formula,            STR_SENSOR_ENGINE_RPM,                     "", "0C",      -1,   2 },
    { vehicle_speed_formula,         "Vehicle Speed:",                  "", "0D",      0,    1 },
-   { engine_load_formula,           "Calculated Load Value:",          "", "04",      0,    1 },
-   { timing_advance_formula,        "Timing Advance (Cyl. #1):",       "", "0E",      0,    1 },
-   { intake_pressure_formula,       "Intake Manifold Pressure:",       "", "0B",      0,    1 },
-   { air_flow_rate_formula,         "Air Flow Rate (MAF sensor):",     "", "10",      0,    2 },
-   { fuel_system1_status_formula,   "Fuel System 1 Status:",           "", "03",      0,    2 },
-   { fuel_system2_status_formula,   "Fuel System 2 Status:",           "", "03",      0,    2 },
+   { engine_load_formula,           STR_SENSOR_ENGINE_LOAD,          "", "04",      0,    1 },
+   { timing_advance_formula,        STR_SENSOR_TIMING_ADVANCE,       "", "0E",      0,    1 },
+   { intake_pressure_formula,       STR_SENSOR_INTAKE_PRESSURE,       "", "0B",      0,    1 },
+   { air_flow_rate_formula,         STR_SENSOR_AIR_FLOW,     "", "10",      0,    2 },
+   { fuel_system1_status_formula,   STR_SENSOR_FUEL_SYS1,           "", "03",      0,    2 },
+   { fuel_system2_status_formula,   STR_SENSOR_FUEL_SYS2,           "", "03",      0,    2 },
    // Page 2
-   { short_term_fuel_trim_formula,  "Short Term Fuel Trim (Bank 1):",  "", "06",      0,    2 },
-   { long_term_fuel_trim_formula,   "Long Term Fuel Trim (Bank 1):",   "", "07",      0,    2 },
-   { short_term_fuel_trim_formula,  "Short Term Fuel Trim (Bank 2):",  "", "08",      0,    2 },
-   { long_term_fuel_trim_formula,   "Long Term Fuel Trim (Bank 2):",   "", "09",      0,    2 },
-   { intake_air_temp_formula,       "Intake Air Temperature:",         "", "0F",      0,    1 },
-   { coolant_temp_formula,          "Coolant Temperature:",            "", "05",      -1,   1 },
-   { fuel_pressure_formula,         "Fuel Pressure (gauge):",          "", "0A",      0,    1 },
-   { secondary_air_status_formula,  "Secondary air status:",           "", "12",      0,    1 },
-   { pto_status_formula,            "Power Take-Off Status:",          "", "1E",      0,    1 },
+   { short_term_fuel_trim_formula,  STR_SENSOR_STFT_BANK1,  "", "06",      0,    2 },
+   { long_term_fuel_trim_formula,   STR_SENSOR_LTFT_BANK1,   "", "07",      0,    2 },
+   { short_term_fuel_trim_formula,  STR_SENSOR_STFT_BANK2,  "", "08",      0,    2 },
+   { long_term_fuel_trim_formula,   STR_SENSOR_LTFT_BANK2,   "", "09",      0,    2 },
+   { intake_air_temp_formula,       STR_SENSOR_INTAKE_TEMP,         "", "0F",      0,    1 },
+   { coolant_temp_formula,          STR_SENSOR_COOLANT_TEMP,            "", "05",      -1,   1 },
+   { fuel_pressure_formula,         STR_SENSOR_FUEL_PRESSURE,          "", "0A",      0,    1 },
+   { secondary_air_status_formula,  STR_SENSOR_SEC_AIR_STATUS,           "", "12",      0,    1 },
+   { pto_status_formula,            STR_SENSOR_PTO_STATUS,          "", "1E",      0,    1 },
    // Page 3
-   { o2_sensor_formula,             "O2 Sensor 1, Bank 1:",            "", "14",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 2, Bank 1:",            "", "15",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 3, Bank 1:",            "", "16",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 4, Bank 1:",            "", "17",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 1, Bank 2:",            "", "18",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 2, Bank 2:",            "", "19",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 3, Bank 2:",            "", "1A",      0,    2 },
-   { o2_sensor_formula,             "O2 Sensor 4, Bank 2:",            "", "1B",      0,    2 },
-   { obd_requirements_formula,      "OBD conforms to:",                "", "1C",      -1,   1 },
+   { o2_sensor_formula,             STR_SENSOR_O2_1_BANK1,            "", "14",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_2_BANK1,            "", "15",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_3_BANK1,            "", "16",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_4_BANK1,            "", "17",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_1_BANK2,            "", "18",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_2_BANK2,            "", "19",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_3_BANK2,            "", "1A",      0,    2 },
+   { o2_sensor_formula,             STR_SENSOR_O2_4_BANK2,            "", "1B",      0,    2 },
+   { obd_requirements_formula,      STR_SENSOR_OBD_CONFORMS,                "", "1C",      -1,   1 },
    // Page 4
-   { o2_sensor_wrv_formula,         "O2 Sensor 1, Bank 1 (WR):",       "", "24",      0,    4 },    // o2 sensors (wide range), voltage
-   { o2_sensor_wrv_formula,         "O2 Sensor 2, Bank 1 (WR):",       "", "25",      0,    4 },
-   { o2_sensor_wrv_formula,         "O2 Sensor 3, Bank 1 (WR):",       "", "26",      0,    4 },
-   { o2_sensor_wrv_formula,         "O2 Sensor 4, Bank 1 (WR):",       "", "27",      0,    4 },
-   { o2_sensor_wrv_formula,         "O2 Sensor 1, Bank 2 (WR):",       "", "28",      0,    4 },
-   { o2_sensor_wrv_formula,         "O2 Sensor 2, Bank 2 (WR):",       "", "29",      0,    4 },
-   { o2_sensor_wrv_formula,         "O2 Sensor 3, Bank 2 (WR):",       "", "2A",      0,    4 },
-   { o2_sensor_wrv_formula,         "O2 Sensor 4, Bank 2 (WR):",       "", "2B",      0,    4 },
-   { engine_run_time_formula,       "Time Since Engine Start:",        "", "1F",      0,    2 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_1_BANK1_WR,       "", "24",      0,    4 },    // o2 sensors (wide range), voltage
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_2_BANK1_WR,       "", "25",      0,    4 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_3_BANK1_WR,       "", "26",      0,    4 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_4_BANK1_WR,       "", "27",      0,    4 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_1_BANK2_WR,       "", "28",      0,    4 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_2_BANK2_WR,       "", "29",      0,    4 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_3_BANK2_WR,       "", "2A",      0,    4 },
+   { o2_sensor_wrv_formula,         STR_SENSOR_O2_4_BANK2_WR,       "", "2B",      0,    4 },
+   { engine_run_time_formula,       STR_SENSOR_ENGINE_RUNTIME,        "", "1F",      0,    2 },
    // Page 5
-   { frp_relative_formula,          "FRP rel. to manifold vacuum:",    "", "22",      0,    2 },    // fuel rail pressure relative to manifold vacuum
-   { frp_widerange_formula,         "Fuel Pressure (gauge):",          "", "23",      0,    2 },    // fuel rail pressure (gauge), wide range
-   { commanded_egr_formula,         "Commanded EGR:",                  "", "2C",      0,    1 },
-   { egr_error_formula,             "EGR Error:",                      "", "2D",      0,    1 },
-   { evap_pct_formula,              "Commanded Evaporative Purge:",    "", "2E",      0,    1 },
-   { fuel_level_formula,            "Fuel Level Input:",               "", "2F",      0,    1 },
-   { warm_ups_formula,              "Warm-ups since ECU reset:",       "", "30",      0,    1 },
-   { clr_distance_formula,          "Distance since ECU reset:",       "", "31",      0,    2 },
+   { frp_relative_formula,          STR_SENSOR_FRP_RELATIVE,    "", "22",      0,    2 },    // fuel rail pressure relative to manifold vacuum
+   { frp_widerange_formula,         STR_SENSOR_FRP_WIDERANGE,          "", "23",      0,    2 },    // fuel rail pressure (gauge), wide range
+   { commanded_egr_formula,         STR_SENSOR_CMD_EGR,                  "", "2C",      0,    1 },
+   { egr_error_formula,             STR_SENSOR_EGR_ERROR,                      "", "2D",      0,    1 },
+   { evap_pct_formula,              STR_SENSOR_EVAP_PURGE,    "", "2E",      0,    1 },
+   { fuel_level_formula,            STR_SENSOR_FUEL_LEVEL,               "", "2F",      0,    1 },
+   { warm_ups_formula,              STR_SENSOR_WARMUPS,       "", "30",      0,    1 },
+   { clr_distance_formula,          STR_SENSOR_DISTANCE_RESET,       "", "31",      0,    2 },
    { evap_vp_formula,               "Evap System Vapor Pressure:",     "", "32",      0,    2 },
    // Page 6
    { o2_sensor_wrc_formula,         "O2 Sensor 1, Bank 1 (WR):",       "", "34",      0,    4 },   // o2 sensors (wide range), current

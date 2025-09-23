@@ -3,6 +3,8 @@
 #include "globals.h"
 #include "allegro_common.h"
 #include "serial.h"
+#include "constants.h"
+#include "numeric_constants.h"
 
 // Serial module variable definitions
 volatile int serial_time_out;
@@ -62,7 +64,7 @@ void serial_module_init()
    /* all variables and code used inside interrupt handlers must be locked */
    LOCK_VARIABLE(serial_time_out);
    LOCK_FUNCTION(serial_time_out_handler);
-   _add_exit_func(serial_module_shutdown, "serial_module_shutdown");
+   _add_exit_func(serial_module_shutdown, STR_SERIAL_MODULE_SHUTDOWN);
 }
 
 void serial_module_shutdown()
@@ -92,7 +94,7 @@ int open_comport()
    // Naming of serial ports 10 and higher: See
    // http://www.connecttech.com/KnowledgeDatabase/kdb227.htm
    // http://support.microsoft.com/?id=115831
-   sprintf(temp_str, "\\\\.\\COM%i", comport.number + 1);
+   sprintf(temp_str, STR_COM_PORT_FORMAT, comport.number + 1);
    com_port = CreateFile(temp_str, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
    if (com_port == INVALID_HANDLE_VALUE)
    {
@@ -135,7 +137,7 @@ int open_comport()
    
    // If the port is Bluetooth, make sure device is active
    PurgeComm(com_port, PURGE_TXCLEAR|PURGE_RXCLEAR);
-   WriteFile(com_port, "?\r", 2, &bytes_written, 0);
+   WriteFile(com_port, STR_SERIAL_QUERY, 2, &bytes_written, 0);
    if (bytes_written != 2)  // If Tx timeout occured
    {
       PurgeComm(com_port, PURGE_TXCLEAR|PURGE_RXCLEAR);
@@ -176,7 +178,7 @@ void send_command(const char *command)
    DWORD bytes_written;
 #endif
    
-   sprintf(tx_buf, "%s\r", command);  // Append CR to the command
+   sprintf(tx_buf, STR_COMMAND_FORMAT, command);  // Append CR to the command
    
 #ifdef ALLEGRO_WINDOWS
    PurgeComm(com_port, PURGE_TXCLEAR|PURGE_RXCLEAR);
@@ -184,7 +186,7 @@ void send_command(const char *command)
    if (bytes_written != strlen(tx_buf))
    {
 #ifdef LOG_COMMS
-      log_comm("TX ERROR", tx_buf);  // Log transmission error
+      log_comm(STR_LOG_TX_ERROR, tx_buf);  // Log transmission error
 #endif
       return;
    }
@@ -194,7 +196,7 @@ void send_command(const char *command)
 #endif
    
 #ifdef LOG_COMMS
-   write_comm_log("TX", tx_buf);
+   write_comm_log(STR_LOG_TX, tx_buf);
 #endif
 }
 
@@ -229,7 +231,7 @@ int read_comport(char *response)
    if (prompt_pos != NULL)
    {
 #ifdef LOG_COMMS
-      write_comm_log("RX", response);
+      write_comm_log(STR_LOG_RX, response);
 #endif
       *prompt_pos = '\0'; // erase ">"
       return PROMPT;      // command prompt detected

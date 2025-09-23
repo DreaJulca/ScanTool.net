@@ -8,7 +8,8 @@
 #include "options.h"
 #include "version.h"
 #include "about.h"
-#include "allegro_common.h"
+#include "constants.h"
+#include "numeric_constants.h"
 
 #define MSG_REFRESH  MSG_USER
 
@@ -37,17 +38,17 @@ static DIALOG about_dialog[] =
    { d_clear_proc,             0,   0,   0,   0,   0,       C_WHITE,       0,    0,      0,   0,   NULL,                   NULL, NULL },
    { logo_proc,                105, 25,  430, 58,  0,       0,             0,    0,      0,   0,   NULL,                   NULL, NULL },
    { st_ctext_proc,            320, 86,  216, 18,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   VER_STR,                NULL, NULL },
-   { large_text_proc,          25,  112, 256, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "What is it?",          NULL, NULL },
+   { large_text_proc,          25,  112, 256, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_WHAT_IS_IT,          NULL, NULL },
    { super_textbox_proc,       25,  136, 407, 80,  C_BLACK, C_WHITE,       0,    0,      0,   0,   whatisit,               NULL, NULL },
-   { large_text_proc,          25,  224, 256, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "What can it do?",      NULL, NULL },
+   { large_text_proc,          25,  224, 256, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_WHAT_CAN_IT_DO,      NULL, NULL },
    { super_textbox_proc,       25,  248, 407, 98,  C_BLACK, C_WHITE,       0,    0,      0,   0,   whatcanitdo,            NULL, NULL },
-   { large_text_proc,          25,  354, 256, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "Where can I get it?",  NULL, NULL },
+   { large_text_proc,          25,  354, 256, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_WHERE_TO_GET,  NULL, NULL },
    { super_textbox_proc,       25,  378, 590, 80,  C_BLACK, C_WHITE,       0,    0,      0,   0,   wheretoget,             NULL, NULL },
    { d_box_proc,               440, 136, 175, 231, C_BLACK, C_LIGHT_GRAY,  0,    0,      0,   0,   NULL,                   NULL, NULL },
-   { about_this_computer_proc, 448, 144, 160, 48,  C_BLACK, C_GREEN,       'c',  D_EXIT, 0,   0,   "About this &computer", NULL, NULL },
-   { obd_info_proc,            448, 200, 160, 48,  C_BLACK, C_DARK_YELLOW, 'o',  D_EXIT, 0,   0,   "&OBD Information",     NULL, NULL },
-   { thanks_proc,              448, 256, 160, 48,  C_BLACK, C_PURPLE,      'r',  D_EXIT, 0,   0,   "C&redits",             NULL, NULL },
-   { d_button_proc,            448, 312, 160, 48,  C_BLACK, C_GREEN,       'm',  D_EXIT, 0,   0,   "Main &Menu",           NULL, NULL },
+   { about_this_computer_proc, 448, 144, 160, 48,  C_BLACK, C_GREEN,       'c',  D_EXIT, 0,   0,   STR_ABOUT_COMPUTER, NULL, NULL },
+   { obd_info_proc,            448, 200, 160, 48,  C_BLACK, C_DARK_YELLOW, 'o',  D_EXIT, 0,   0,   STR_OBD_INFORMATION,     NULL, NULL },
+   { thanks_proc,              448, 256, 160, 48,  C_BLACK, C_PURPLE,      'r',  D_EXIT, 0,   0,   STR_CREDITS,             NULL, NULL },
+   { d_button_proc,            448, 312, 160, 48,  C_BLACK, C_GREEN,       'm',  D_EXIT, 0,   0,   STR_MAIN_MENU,           NULL, NULL },
    { d_yield_proc,             0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,                   NULL, NULL },
    { NULL,                     0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,                   NULL, NULL }
 };
@@ -57,6 +58,7 @@ static DIALOG thanks_dialog[] =
    /* (proc)            (x)  (y)  (w)  (h)  (fg)   (bg)            (key) (flags) (d1) (d2) (dp)      (dp2) (dp3) */
    { d_shadow_box_proc, 0,   0,   608, 290, C_BLACK, C_LIGHT_GRAY,  0,    0,      0,   0,   NULL,     NULL, NULL },
    { d_shadow_box_proc, 0,   0,   608, 24,  C_BLACK, C_DARK_GRAY,   0,    0,      0,   0,   NULL,     NULL, NULL },
+<<<<<<< HEAD
    { caption_proc,      304, 2,   301, 19,  C_WHITE, C_TRANSP,      0,    0,      0,   0,   "We would like to thank the following people and organizations:", NULL, NULL },
    { d_text_proc,       24,  36,  560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- DJ Delorie (www.delorie.com) for the DJGPP compiler ", NULL, NULL },
    { d_text_proc,       24,  60,  560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Bloodshed Software (www.bloodshed.net) for the Dev-C++ IDE", NULL, NULL },
@@ -67,6 +69,18 @@ static DIALOG thanks_dialog[] =
    { d_text_proc,       24,  180, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- Joaqun M Lpez Muoz (joaquin@tid.es) for listports library", NULL, NULL },
    { d_text_proc,       24,  204, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "- All users who provided feedback and bug reports", NULL, NULL },
    { d_button_proc,     248, 235, 112, 40,  C_BLACK, C_DARK_YELLOW, 'c',  D_EXIT, 0,   0,   "&Close", NULL, NULL },
+=======
+   { caption_proc,      304, 2,   301, 19,  C_WHITE, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_HEADER, NULL, NULL },
+   { d_text_proc,       24,  36,  560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_DELORIE, NULL, NULL },
+   { d_text_proc,       24,  60,  560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_BLOODSHED, NULL, NULL },
+   { d_text_proc,       24,  84,  560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_HARGREAVES, NULL, NULL },
+   { d_text_proc,       24,  108, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_DZCOMM, NULL, NULL },
+   { d_text_proc,       24,  132, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_CUGNIERE, NULL, NULL },
+   { d_text_proc,       24,  156, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_BOTCAZOU, NULL, NULL },
+   { d_text_proc,       24,  180, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_LOPEZ, NULL, NULL },
+   { d_text_proc,       24,  204, 560, 24,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   STR_THANKS_USERS, NULL, NULL },
+   { d_button_proc,     248, 235, 112, 40,  C_BLACK, C_DARK_YELLOW, 'c',  D_EXIT, 0,   0,   STR_CLOSE, NULL, NULL },
+>>>>>>> master
    { d_yield_proc,      0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,     NULL, NULL },
    { NULL,              0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,     NULL, NULL }
 };
@@ -76,7 +90,7 @@ static DIALOG obd_info_dialog[] =
    /* (proc)               (x)  (y)  (w)  (h)  (fg)     (bg)           (key) (flags) (d1) (d2) (dp)               (dp2) (dp3) */
    { d_shadow_box_proc,    0,   0,   444, 188, C_BLACK, C_LIGHT_GRAY,  0,    0,      0,   0,   NULL,              NULL, NULL },
    { d_shadow_box_proc,    0,   0,   444, 24,  C_BLACK, C_DARK_GRAY,   0,    0,      0,   0,   NULL,              NULL, NULL },
-   { caption_proc,         222, 2,   218, 19,  C_WHITE, C_TRANSP,      0,    0,      0,   0,   "OBD Information", NULL, NULL },
+   { caption_proc,         222, 2,   218, 19,  C_WHITE, C_TRANSP,      0,    0,      0,   0,   STR_OBD_INFORMATION, NULL, NULL },
    { d_rtext_proc,         12,  36,  108, 16,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "Interface:",      NULL, NULL },
    { d_text_proc,          124, 36,  316, 16,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   obd_interface,     NULL, NULL },
    { d_rtext_proc,         12,  60,  108, 16,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "Manufacturer:",   NULL, NULL },
@@ -85,8 +99,8 @@ static DIALOG obd_info_dialog[] =
    { d_text_proc,          124, 84,  316, 16,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   obd_protocol,      NULL, NULL },
    { d_rtext_proc,         12,  108, 108, 16,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   "OBD System:",     NULL, NULL },
    { d_text_proc,          124, 108, 316, 16,  C_BLACK, C_TRANSP,      0,    0,      0,   0,   obd_system,        NULL, NULL },
-   { refresh_proc,         140, 144, 76,  32,  C_BLACK, C_GREEN,       0,    D_EXIT, 0,   0,   "Refresh",         NULL, NULL },
-   { d_button_proc,        231, 144, 76,  32,  C_BLACK, C_DARK_YELLOW, 0,    D_EXIT, 0,   0,   "Close",           NULL, NULL },
+   { refresh_proc,         140, 144, 76,  32,  C_BLACK, C_GREEN,       0,    D_EXIT, 0,   0,   STR_REFRESH,         NULL, NULL },
+   { d_button_proc,        231, 144, 76,  32,  C_BLACK, C_DARK_YELLOW, 0,    D_EXIT, 0,   0,   STR_CLOSE,           NULL, NULL },
    { obd_info_getter_proc, 0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,              NULL, NULL },
    { d_yield_proc,         0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,              NULL, NULL },
    { NULL,                 0,   0,   0,   0,   0,       0,             0,    0,      0,   0,   NULL,              NULL, NULL }
@@ -94,9 +108,9 @@ static DIALOG obd_info_dialog[] =
 
 int display_about()
 {
-   strcpy(whatisit, "ScanTool.net is multi-platform, open-source software designed to work with the ElmScan and OBDLink families of OBD-II interfaces, our inexpensive alternatives to professional diagnostic scan tools.");
+   strcpy(whatisit, STR_WHAT_IS_IT_DESC);
    sprintf(whatcanitdo, "ScanTool.net v%s allows you to read and clear trouble codes, and display real-time sensor data.  Software with more advanced features, such as data logging,  virtual dashboard, and support for additional test modes is available from third-party vendors.", SCANTOOL_VERSION_STR);
-   strcpy(wheretoget, "You can download the latest version of this software, and buy your scan tool from www.ScanTool.net. There, you can also find contact information for your local distributor, and links to third-party software.");
+   strcpy(wheretoget, STR_WHERE_TO_GET_DESC);
 
    return do_dialog(about_dialog, -1); // do the dialog
 }
@@ -823,16 +837,16 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
                   strcpy(processor_model, " Mobile Pentium II or Celeron (Mendocino)");
                   break;
                case 7:
-                  strcpy(processor_model, " Pentium III (Katmai)");
+                  strcpy(processor_model, STR_CPU_PENTIUM_III_KATMAI);
                   break;
                case 8:
-                  strcpy(processor_model, " Pentium III (Coppermine)");
+                  strcpy(processor_model, STR_CPU_PENTIUM_III_COPPER);
                   break;
             }
          }
 
          if (cpu_family >= 15)
-            strcpy(processor_model, " Pentium IV or better");
+            strcpy(processor_model, STR_CPU_PENTIUM_IV);
       } // end of Intel block
 
       if(!strcmp("AuthenticAMD", cpu_vendor))
@@ -854,10 +868,10 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
                   case 9:
                      strcpy(processor_model, " 486 DX/4-WB");
                      break;
-                  case 14:
+                  case CPU_FAMILY_PENTIUM_14:
                      strcpy(processor_model, " Am5x86-WT");
                      break;
-                  case 15:
+                  case CPU_FAMILY_PENTIUM_15:
                      strcpy(processor_model, " Am5x86-WB");
                      break;
                }
@@ -891,22 +905,22 @@ int about_this_computer_proc(int msg, DIALOG *d, int c)
                switch (cpu_model)
                {
                   case 0: case 1:
-                     strcpy(processor_model, " Athlon (25 um)");
+                     strcpy(processor_model, STR_CPU_ATHLON_25UM);
                      break;
                   case 2:
-                     strcpy(processor_model, " Athlon (18 um)");
+                     strcpy(processor_model, STR_CPU_ATHLON_18UM);
                      break;
                   case 3:
-                     strcpy(processor_model, " Duron");
+                     strcpy(processor_model, STR_CPU_DURON);
                      break;
                   case 4:
-                     strcpy(processor_model, " Athlon (Thunderbird)");
+                     strcpy(processor_model, STR_CPU_ATHLON_THUNDERBIRD);
                      break;
                   case 6:
-                     strcpy(processor_model, " Athlon (Palamino)");
+                     strcpy(processor_model, STR_CPU_ATHLON_PALAMINO);
                      break;
                   case 7:
-                     strcpy(processor_model, " Duron (Morgan)");
+                     strcpy(processor_model, STR_CPU_DURON_MORGAN);
                      break;
                }
                break;
